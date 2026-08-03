@@ -1,0 +1,6 @@
+CREATE TABLE platform_metadata (
+    id BIGSERIAL PRIMARY KEY,
+    initialized_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO platform_metadata DEFAULT VALUES;
