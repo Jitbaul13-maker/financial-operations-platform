@@ -2,13 +2,14 @@ package com.finops.financial_operations_platform.Services;
 
 import com.finops.financial_operations_platform.Dtos.CreateTransactionRequest;
 import com.finops.financial_operations_platform.Dtos.TransactionResponse;
+import com.finops.financial_operations_platform.Exeptions.TransactionNotFoundException;
 import com.finops.financial_operations_platform.enums.TransactionStatus;
 import com.finops.financial_operations_platform.models.Transaction;
 import com.finops.financial_operations_platform.repos.TransactionRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Pageable;
 import java.util.UUID;
 
 @Service
@@ -51,7 +52,7 @@ public class TransactionService {
 
     public TransactionResponse getTransaction(String txId) {
         Transaction tx = transactionRepository.findByTransactionId(txId)
-                .orElseThrow(() -> new RuntimeException("No valid transaction found!"));
+                .orElseThrow(() -> new TransactionNotFoundException("Transaction not found:" + txId));
 
         return mapToResponse(tx);
     }
