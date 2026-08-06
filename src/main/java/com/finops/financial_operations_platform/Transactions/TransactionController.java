@@ -2,7 +2,9 @@ package com.finops.financial_operations_platform.Transactions;
 
 import com.finops.financial_operations_platform.Dtos.CreateTransactionRequest;
 import com.finops.financial_operations_platform.Dtos.TransactionResponse;
+import com.finops.financial_operations_platform.Dtos.TransactionStatusUpdateRequest;
 import com.finops.financial_operations_platform.Services.TransactionService;
+import com.finops.financial_operations_platform.enums.TransactionStatus;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,6 +38,13 @@ public class TransactionController {
     @GetMapping()
     public ResponseEntity<Page<TransactionResponse>> getAllTransactions(Pageable pageable) {
         Page<TransactionResponse> response = service.getTransactions(pageable);
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/{txnId}/status")
+    public ResponseEntity<TransactionResponse> updateTransaction
+            (@PathVariable("txnId") String id, @RequestBody @Valid TransactionStatusUpdateRequest request) {
+        TransactionResponse response = service.updateTransactionStatus(id, request.getStatus());
         return ResponseEntity.ok(response);
     }
 }

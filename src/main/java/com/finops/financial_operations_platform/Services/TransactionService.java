@@ -2,7 +2,9 @@ package com.finops.financial_operations_platform.Services;
 
 import com.finops.financial_operations_platform.Dtos.CreateTransactionRequest;
 import com.finops.financial_operations_platform.Dtos.TransactionResponse;
+import com.finops.financial_operations_platform.Dtos.TransactionStatusUpdateRequest;
 import com.finops.financial_operations_platform.Exceptions.TransactionNotFoundException;
+import com.finops.financial_operations_platform.businesslogics.TransactionStateMachine;
 import com.finops.financial_operations_platform.enums.TransactionStatus;
 import com.finops.financial_operations_platform.models.Transaction;
 import com.finops.financial_operations_platform.repos.TransactionRepository;
@@ -16,9 +18,12 @@ import java.util.UUID;
 public class TransactionService {
 
     private final TransactionRepository transactionRepository;
+    private final TransactionStateMachine stateMachine;
 
-    public TransactionService(TransactionRepository transactionRepository) {
+    public TransactionService
+            (TransactionRepository transactionRepository, TransactionStateMachine stateMachine) {
         this.transactionRepository = transactionRepository;
+        this.stateMachine = stateMachine;
     }
 
     private TransactionResponse mapToResponse(Transaction tx) {
@@ -60,5 +65,18 @@ public class TransactionService {
     public Page<TransactionResponse> getTransactions(Pageable pageable){
         Page<Transaction> transactions = transactionRepository.findAll(pageable);
         return transactions.map(this::mapToResponse);
+    }
+
+    public TransactionResponse updateTransactionStatus(String transactionId, TransactionStatus requestedStatus) {
+        Transaction tx = transactionRepository.findByTransactionId(transactionId)
+                .orElseThrow(() -> new TransactionNotFoundException("No valid transaction found"));
+
+        stateMachine.validateTransition(tx.getStatus(), requestedStatus);
+
+        tx.setStatus(requestedStatus);
+
+        Transaction saved_tx = transactionRepository.save(tx);
+
+        return mapToResponse(saved_tx);
     }
 }
