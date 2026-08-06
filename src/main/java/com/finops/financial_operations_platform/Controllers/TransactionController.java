@@ -1,10 +1,9 @@
-package com.finops.financial_operations_platform.Transactions;
+package com.finops.financial_operations_platform.Controllers;
 
 import com.finops.financial_operations_platform.Dtos.CreateTransactionRequest;
 import com.finops.financial_operations_platform.Dtos.TransactionResponse;
 import com.finops.financial_operations_platform.Dtos.TransactionStatusUpdateRequest;
 import com.finops.financial_operations_platform.Services.TransactionService;
-import com.finops.financial_operations_platform.enums.TransactionStatus;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
