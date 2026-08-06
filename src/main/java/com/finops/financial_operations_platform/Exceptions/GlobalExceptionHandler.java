@@ -1,4 +1,4 @@
-package com.finops.financial_operations_platform.Exeptions;
+package com.finops.financial_operations_platform.Exceptions;
 
 import com.finops.financial_operations_platform.Dtos.ExceptionResponse;
 import com.finops.financial_operations_platform.Dtos.ValidationExceptionResponse;
@@ -22,8 +22,20 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.NOT_FOUND)
                 .body(new ExceptionResponse(
                         ex.getMessage(),
-                        404,
+                        HttpStatus.NOT_FOUND.value(),
                         "TRANSACTION_NOT_FOUND",
+                        LocalDateTime.now()
+                ));
+    }
+
+    @ExceptionHandler(InvalidTransactionStateTransitionException.class)
+    public ResponseEntity<ExceptionResponse> InvalidTransactionStateTransitionException
+            (InvalidTransactionStateTransitionException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                new ExceptionResponse(
+                        ex.getMessage(),
+                        HttpStatus.CONFLICT.value(),
+                        "Invalid Transaction Request",
                         LocalDateTime.now()
                 ));
     }

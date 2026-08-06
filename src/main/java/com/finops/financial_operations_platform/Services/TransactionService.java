@@ -2,7 +2,7 @@ package com.finops.financial_operations_platform.Services;
 
 import com.finops.financial_operations_platform.Dtos.CreateTransactionRequest;
 import com.finops.financial_operations_platform.Dtos.TransactionResponse;
-import com.finops.financial_operations_platform.Exeptions.TransactionNotFoundException;
+import com.finops.financial_operations_platform.Exceptions.TransactionNotFoundException;
 import com.finops.financial_operations_platform.enums.TransactionStatus;
 import com.finops.financial_operations_platform.models.Transaction;
 import com.finops.financial_operations_platform.repos.TransactionRepository;

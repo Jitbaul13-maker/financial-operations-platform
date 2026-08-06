@@ -1,4 +1,4 @@
-package com.finops.financial_operations_platform.Exeptions;
+package com.finops.financial_operations_platform.Exceptions;
 
 public class TransactionNotFoundException extends RuntimeException{
     public TransactionNotFoundException(String message) {
