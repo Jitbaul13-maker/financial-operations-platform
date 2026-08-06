@@ -124,8 +124,8 @@ Ensure the following are installed:
 ### Clone the Repository
 
 ```bash
-git clone <repository-url>
-cd <repository-name>
+git clone https://github.com/Jitbaul13-maker/financial-operations-platform
+cd financial-operations-platform
 ```
 
 ### Configure Environment
