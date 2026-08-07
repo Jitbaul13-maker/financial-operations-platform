@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +25,7 @@ public class GlobalExceptionHandler {
                         ex.getMessage(),
                         HttpStatus.NOT_FOUND.value(),
                         "TRANSACTION_NOT_FOUND",
-                        LocalDateTime.now()
+                        OffsetDateTime.now()
                 ));
     }
 
@@ -36,7 +37,7 @@ public class GlobalExceptionHandler {
                         ex.getMessage(),
                         HttpStatus.CONFLICT.value(),
                         "Invalid Transaction Request",
-                        LocalDateTime.now()
+                        OffsetDateTime.now()
                 ));
     }
 
@@ -53,7 +54,7 @@ public class GlobalExceptionHandler {
                         "Request validation failed",
                         HttpStatus.BAD_REQUEST.value(),
                         "VALIDATION_FAILED",
-                        LocalDateTime.now(),
+                        OffsetDateTime.now(),
                         errors
                 )
         );

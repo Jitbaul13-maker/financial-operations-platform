@@ -7,6 +7,7 @@ import com.finops.financial_operations_platform.businesslogics.TransactionStateM
 import com.finops.financial_operations_platform.enums.TransactionStatus;
 import com.finops.financial_operations_platform.models.Transaction;
 import com.finops.financial_operations_platform.repos.TransactionRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,11 +19,14 @@ public class TransactionService {
 
     private final TransactionRepository transactionRepository;
     private final TransactionStateMachine stateMachine;
+    private final AuditLogService auditLogService;
 
     public TransactionService
-            (TransactionRepository transactionRepository, TransactionStateMachine stateMachine) {
+            (TransactionRepository transactionRepository,
+             TransactionStateMachine stateMachine,AuditLogService auditLogService) {
         this.transactionRepository = transactionRepository;
         this.stateMachine = stateMachine;
+        this.auditLogService = auditLogService;
     }
 
     private TransactionResponse mapToResponse(Transaction tx) {
@@ -38,18 +42,21 @@ public class TransactionService {
         );
     }
 
+    @Transactional
     public TransactionResponse createTransaction(CreateTransactionRequest req) {
         Transaction tx = new Transaction();
 
-        tx.setCustomerId(req.getCustomerId());
-        tx.setAmount(req.getAmount());
-        tx.setProvider(req.getProvider());
-        tx.setCurrency(req.getCurrency().toUpperCase());
+        tx.setCustomerId(req.customerId());
+        tx.setAmount(req.amount());
+        tx.setProvider(req.provider());
+        tx.setCurrency(req.currency().toUpperCase());
 
         tx.setTransactionId("TXN-" + UUID.randomUUID());
         tx.setStatus(TransactionStatus.INITIATED);
 
         Transaction saved_tx = transactionRepository.save(tx);
+        auditLogService.recordAudit(saved_tx.getTransactionId(), null, TransactionStatus.INITIATED, "SYSTEM",
+                "Initial Transaction creation");
 
         return mapToResponse(saved_tx);
     }
@@ -66,16 +73,20 @@ public class TransactionService {
         return transactions.map(this::mapToResponse);
     }
 
+    @Transactional
     public TransactionResponse updateTransactionStatus(String transactionId, TransactionStatus requestedStatus) {
         Transaction tx = transactionRepository.findByTransactionId(transactionId)
                 .orElseThrow(() -> new TransactionNotFoundException("No valid transaction found"));
 
         stateMachine.validateTransition(tx.getStatus(), requestedStatus);
 
+        TransactionStatus oldStatus = tx.getStatus();
         tx.setStatus(requestedStatus);
 
-        Transaction saved_tx = transactionRepository.save(tx);
+        auditLogService.recordAudit(tx.getTransactionId(), oldStatus, requestedStatus, "SYSTEM",
+                "Transaction status updated");
 
-        return mapToResponse(saved_tx);
+        return mapToResponse(tx);
     }
+
 }

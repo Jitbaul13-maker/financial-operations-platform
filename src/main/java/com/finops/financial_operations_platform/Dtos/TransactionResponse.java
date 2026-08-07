@@ -9,19 +9,16 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
-@Getter
-@Setter
-@AllArgsConstructor
-public class TransactionResponse {
+public record TransactionResponse (
 
-    private String customerId;
-    private String transactionId;
-    private Provider provider;
-    private BigDecimal amount;
-    private String currency;
-    private TransactionStatus status;
+    String customerId,
+    String transactionId,
+    Provider provider,
+    BigDecimal amount,
+    String currency,
+    TransactionStatus status,
 
-    private OffsetDateTime createdAt;
-    private OffsetDateTime updatedAt;
+    OffsetDateTime createdAt,
+    OffsetDateTime updatedAt
 
-}
+){}

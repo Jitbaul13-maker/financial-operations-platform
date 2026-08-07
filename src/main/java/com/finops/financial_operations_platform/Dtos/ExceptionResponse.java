@@ -1,17 +1,11 @@
 package com.finops.financial_operations_platform.Dtos;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
-@Getter
-@Setter
-@AllArgsConstructor
-public class ExceptionResponse {
-    private String msg;
-    private Integer status;
-    private String error;
-    private LocalDateTime time;
-}
+public record ExceptionResponse (
+    String msg,
+    Integer status,
+    String error,
+    OffsetDateTime time
+){}

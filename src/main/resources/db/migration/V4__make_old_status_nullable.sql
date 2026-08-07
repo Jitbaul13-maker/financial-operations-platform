@@ -1,0 +1,2 @@
+ALTER TABLE audit_log
+ALTER COLUMN old_status DROP NOT NULL;

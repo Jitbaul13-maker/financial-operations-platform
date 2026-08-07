@@ -1,8 +1,10 @@
 package com.finops.financial_operations_platform.Controllers;
 
+import com.finops.financial_operations_platform.Dtos.AuditResponse;
 import com.finops.financial_operations_platform.Dtos.CreateTransactionRequest;
 import com.finops.financial_operations_platform.Dtos.TransactionResponse;
 import com.finops.financial_operations_platform.Dtos.TransactionStatusUpdateRequest;
+import com.finops.financial_operations_platform.Services.AuditLogService;
 import com.finops.financial_operations_platform.Services.TransactionService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -11,39 +13,49 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/transactions")
 public class TransactionController {
 
-    private final TransactionService service;
+    private final TransactionService transactionService;
+    private final AuditLogService auditLogService;
 
-    public TransactionController(TransactionService service) {
-        this.service = service;
+    public TransactionController(TransactionService transactionService, AuditLogService auditLogService) {
+        this.transactionService = transactionService;
+        this.auditLogService = auditLogService;
     }
 
     @PostMapping()
     public ResponseEntity<TransactionResponse> createTransaction(@Valid @RequestBody CreateTransactionRequest req){
-        TransactionResponse response = service.createTransaction(req);
+        TransactionResponse response = transactionService.createTransaction(req);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/{txnId}")
     public ResponseEntity<TransactionResponse> getByTransactionId(@PathVariable("txnId") String txnId) {
-        TransactionResponse response = service.getTransaction(txnId);
+        TransactionResponse response = transactionService.getTransaction(txnId);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping()
     public ResponseEntity<Page<TransactionResponse>> getAllTransactions(Pageable pageable) {
-        Page<TransactionResponse> response = service.getTransactions(pageable);
+        Page<TransactionResponse> response = transactionService.getTransactions(pageable);
         return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/{txnId}/status")
     public ResponseEntity<TransactionResponse> updateTransaction
             (@PathVariable("txnId") String id, @RequestBody @Valid TransactionStatusUpdateRequest request) {
-        TransactionResponse response = service.updateTransactionStatus(id, request.getStatus());
+        TransactionResponse response = transactionService.updateTransactionStatus(id, request.getStatus());
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{txnId}/audit")
+    public ResponseEntity<List<AuditResponse>> getAuditHistory(@PathVariable("txnId") String id) {
+            List<AuditResponse> response = auditLogService.getAuditHistory(id);
+            return ResponseEntity.ok(response);
     }
 }

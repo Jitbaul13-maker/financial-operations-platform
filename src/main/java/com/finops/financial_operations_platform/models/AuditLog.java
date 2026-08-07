@@ -3,11 +3,13 @@ package com.finops.financial_operations_platform.models;
 import com.finops.financial_operations_platform.enums.TransactionStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.OffsetDateTime;
 
 @Entity
 @Getter
+@NoArgsConstructor
 @Table(name = "audit_log")
 public class AuditLog {
 
@@ -15,7 +17,6 @@ public class AuditLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private TransactionStatus oldStatus;
     @Column(nullable = false)
@@ -38,4 +39,13 @@ public class AuditLog {
 
     @Column(name = "transaction_id", nullable = false)
     private String transactionId;
+
+    public AuditLog(TransactionStatus oldStatus, TransactionStatus newStatus,
+                    String actor, String reason, String transactionId) {
+        this.oldStatus = oldStatus;
+        this.newStatus = newStatus;
+        this.actor = actor;
+        this.reason = reason;
+        this.transactionId = transactionId;
+    }
 }
