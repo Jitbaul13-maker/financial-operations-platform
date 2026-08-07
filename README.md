@@ -4,7 +4,7 @@ A backend-focused financial operations platform designed to model reliable trans
 
 The project is being developed incrementally, with an emphasis on correctness, explicit state management, testing, observability, and production-oriented engineering practices.
 
-> **Status:** 🚧 Under active development — Stage 2 completed.
+> Status: 🚧 Under active development — Stage 3 completed.
 
 ## Tech Stack
 
@@ -66,6 +66,19 @@ COMPLETED FAILED
 REVERSED
 ```
 
+### Stage 3 — Immutable Audit Trail ✅
+
+Every transaction state change is recorded in an append-only audit log.
+
+Current capabilities include:
+
+- Immutable audit records
+- Previous and new transaction status tracking
+- Actor and reason recording
+- Timestamped audit events
+- Atomic transaction + audit persistence
+- Transaction audit history endpoint
+
 Valid transitions are explicitly controlled by the domain rather than allowing arbitrary status changes.
 
 Invalid transitions are rejected, protecting transaction lifecycle integrity.
@@ -82,16 +95,30 @@ State transition behavior is covered by automated tests.
 | `FAILED`     | Transaction processing failed        |
 | `REVERSED`   | A completed transaction was reversed |
 
+## Audit Guarantees
+
+The platform maintains an append-only audit trail for every transaction state change.
+
+Every audit record captures:
+
+- Previous status
+- New status
+- Actor
+- Reason
+- Timestamp
+
+Transaction state updates and audit persistence execute within the same database transaction, ensuring they either both succeed or both roll back.
+
 ## Development Roadmap
 
 The platform is being built incrementally.
 
 ```text
-Stage 0  ✅  Project Bootstrap
-Stage 1  ✅  Transaction Ledger
-Stage 2  ✅  Transaction State Machine
-Stage 3  ⏳  Idempotency & Concurrency
-Stage 4+ ⏳  Planned
+Stage 0  ✅ Project Bootstrap
+Stage 1  ✅ Transaction Ledger
+Stage 2  ✅ Transaction State Machine
+Stage 3  ✅ Immutable Audit Trail
+Stage 4  ⏳ Idempotent Ingestion & Concurrency
 ```
 
 Future stages will introduce concepts including:
@@ -164,7 +191,7 @@ The architecture will evolve as these requirements are introduced.
 
 ## Project Status
 
-**Current milestone: Stage 2 completed.**
+**Current milestone: Stage 3 completed.**
 
 The next milestone focuses on **idempotency and concurrency control**.
 
