@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface AuditLogRepository extends JpaRepository<AuditLog, Long> {
-    List<AuditLog> findByTransactionIdOrderByCreatedAtAsc(String id);
+    Optional<List<AuditLog>> findByTransactionIdOrderByCreatedAtAsc(String id);
 }

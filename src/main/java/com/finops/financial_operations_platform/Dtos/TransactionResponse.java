@@ -2,10 +2,6 @@ package com.finops.financial_operations_platform.Dtos;
 
 import com.finops.financial_operations_platform.enums.Provider;
 import com.finops.financial_operations_platform.enums.TransactionStatus;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 

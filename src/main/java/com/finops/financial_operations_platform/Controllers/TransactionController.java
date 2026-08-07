@@ -49,7 +49,7 @@ public class TransactionController {
     @PatchMapping("/{txnId}/status")
     public ResponseEntity<TransactionResponse> updateTransaction
             (@PathVariable("txnId") String id, @RequestBody @Valid TransactionStatusUpdateRequest request) {
-        TransactionResponse response = transactionService.updateTransactionStatus(id, request.getStatus());
+        TransactionResponse response = transactionService.updateTransactionStatus(id, request.status());
         return ResponseEntity.ok(response);
     }
 

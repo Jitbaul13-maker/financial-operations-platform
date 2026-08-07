@@ -19,7 +19,8 @@ public class AuditLogService {
     }
 
     public List<AuditResponse> getAuditHistory(String id) {
-        List<AuditLog> logs = auditLogRepository.findByTransactionIdOrderByCreatedAtAsc(id);
+        List<AuditLog> logs = auditLogRepository.findByTransactionIdOrderByCreatedAtAsc(id)
+                .orElseThrow(() -> new TransactionNotFoundException("No valid transaction found!"));
 
         return logs.stream().map(this::mapToResponse).toList();
     }

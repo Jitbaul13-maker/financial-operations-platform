@@ -1,4 +1,4 @@
-package com.finops.financial_operations_platform;
+package com.finops.financial_operations_platform.businesslogictest;
 
 import com.finops.financial_operations_platform.Exceptions.InvalidTransactionStateTransitionException;
 import com.finops.financial_operations_platform.enums.TransactionStatus;
