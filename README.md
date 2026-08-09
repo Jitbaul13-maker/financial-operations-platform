@@ -4,7 +4,7 @@ A backend-focused financial operations platform designed to model reliable trans
 
 The project is being developed incrementally, with an emphasis on correctness, explicit state management, testing, observability, and production-oriented engineering practices.
 
-> Status: 🚧 Under active development — Stage 3 completed.
+> Status: 🚧 Under active development — Stage 4 completed.
 
 ## Tech Stack
 
@@ -14,6 +14,7 @@ The project is being developed incrementally, with an emphasis on correctness, e
 * Spring Boot
 * Spring Data JPA
 * PostgreSQL
+* Redis
 * Maven
 * Docker / Docker Compose
 * JUnit
@@ -22,9 +23,29 @@ Additional infrastructure and distributed-system components will be introduced a
 
 ## Current Architecture
 
-The application currently follows a **modular monolith** architecture.
+The application currently follows a modular monolith architecture.
 
-The initial stages intentionally focus on building a reliable transaction core before introducing asynchronous processing, caching, security, observability, and distributed infrastructure.
+The transaction core now provides:
+
+Transaction Request
+       │
+       ▼
+Idempotency Check
+       │
+       ├── Duplicate → Return existing transaction
+       │
+       ▼
+Transaction Processing
+       │
+       ▼
+Optimistic Locking
+       │
+       ├── Version Conflict → Reject update
+       │
+       ▼
+State + Audit Update
+
+These mechanisms provide the foundation for safely handling retries and concurrent requests as the platform evolves toward asynchronous and distributed processing.
 
 ## Implemented Features
 
@@ -85,6 +106,20 @@ Invalid transitions are rejected, protecting transaction lifecycle integrity.
 
 State transition behavior is covered by automated tests.
 
+### Stage 4 — Idempotent Ingestion & Concurrency Control ✅
+
+The transaction ingestion flow now protects against duplicate requests and concurrent modifications.
+
+Current capabilities include:
+
+* Idempotent transaction creation using an idempotency key
+* Duplicate request detection
+* Database-level uniqueness enforcement for idempotency keys
+* Concurrent transaction update protection
+* Optimistic locking using a version field
+* Conflict detection for stale updates
+* Tests covering duplicate requests and concurrent update scenarios
+
 ## Transaction States
 
 | State        | Description                          |
@@ -118,14 +153,13 @@ Stage 0  ✅ Project Bootstrap
 Stage 1  ✅ Transaction Ledger
 Stage 2  ✅ Transaction State Machine
 Stage 3  ✅ Immutable Audit Trail
-Stage 4  ⏳ Idempotent Ingestion & Concurrency
+Stage 4 ✅ Idempotent Ingestion & Concurrency
+Stage 5 ⏳ Redis Caching Stage
+6+ ⏳ Planned
 ```
 
 Future stages will introduce concepts including:
 
-* Idempotent transaction processing
-* Concurrency control
-* Redis
 * Kafka and asynchronous workflows
 * Reconciliation
 * Authentication and authorization
@@ -191,9 +225,9 @@ The architecture will evolve as these requirements are introduced.
 
 ## Project Status
 
-**Current milestone: Stage 3 completed.**
+**Current milestone: Stage 4 completed.**
 
-The next milestone focuses on **idempotency and concurrency control**.
+The next milestone focuses on introducing **Redis caching** into the transaction platform.
 
 ---
 
