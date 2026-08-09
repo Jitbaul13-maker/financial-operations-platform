@@ -27,6 +27,7 @@ The application currently follows a modular monolith architecture.
 
 The transaction core now provides:
 
+```
 Transaction Request
        │
        ▼
@@ -44,6 +45,7 @@ Optimistic Locking
        │
        ▼
 State + Audit Update
+```
 
 These mechanisms provide the foundation for safely handling retries and concurrent requests as the platform evolves toward asynchronous and distributed processing.
 
