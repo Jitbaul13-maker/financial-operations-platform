@@ -7,6 +7,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 import java.time.Duration;
 
+@Service
 public class RedisTestService {
 
     private final RedisTemplate<String, String> redisTemplate;

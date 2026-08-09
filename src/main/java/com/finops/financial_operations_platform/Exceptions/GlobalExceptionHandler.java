@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(InvalidTransactionStateTransitionException.class)
-    public ResponseEntity<ExceptionResponse> InvalidTransactionStateTransitionException
+    public ResponseEntity<ExceptionResponse> invalidTransactionStateTransitionException
             (InvalidTransactionStateTransitionException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(
                 new ExceptionResponse(
@@ -38,6 +38,42 @@ public class GlobalExceptionHandler {
                         "Invalid Transaction Request",
                         OffsetDateTime.now()
                 ));
+    }
+
+    @ExceptionHandler(IdempotencyStateException.class)
+    public ResponseEntity<ExceptionResponse> idempotencyStateException(IdempotencyStateException ex) {
+        return ResponseEntity.status(HttpStatus.FAILED_DEPENDENCY).body(
+                new ExceptionResponse(
+                        ex.getMessage(),
+                        HttpStatus.FAILED_DEPENDENCY.value(),
+                        "Idempotency failure",
+                        OffsetDateTime.now()
+                )
+        );
+    }
+
+    @ExceptionHandler(IdempotencyInProgressException.class)
+    public ResponseEntity<ExceptionResponse> idempotencyInProgressException(IdempotencyInProgressException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                new ExceptionResponse(
+                        ex.getMessage(),
+                        HttpStatus.CONFLICT.value(),
+                        "Duplicate Idempotency key",
+                        OffsetDateTime.now()
+                )
+        );
+    }
+
+    @ExceptionHandler(IdempotencyConflictException.class)
+    public ResponseEntity<ExceptionResponse> idempotencyConflictException(IdempotencyConflictException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                new ExceptionResponse(
+                        ex.getMessage(),
+                        HttpStatus.CONFLICT.value(),
+                        "Duplicate Idempotency key",
+                        OffsetDateTime.now()
+                )
+        );
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

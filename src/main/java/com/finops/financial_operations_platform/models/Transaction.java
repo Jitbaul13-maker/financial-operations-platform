@@ -21,6 +21,7 @@ public class Transaction {
 
     @Column(nullable = false, unique = true)
     private String transactionId;
+    @Column(unique = true, nullable = false)
     private String idempotencyKey;
 
     @Enumerated(EnumType.STRING)
