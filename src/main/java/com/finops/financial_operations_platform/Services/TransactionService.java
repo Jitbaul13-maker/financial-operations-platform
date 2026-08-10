@@ -3,6 +3,7 @@ package com.finops.financial_operations_platform.Services;
 import com.finops.financial_operations_platform.Dtos.CreateTransactionRequest;
 import com.finops.financial_operations_platform.Dtos.IdempotencyResult;
 import com.finops.financial_operations_platform.Dtos.TransactionResponse;
+import com.finops.financial_operations_platform.Exceptions.IdempotencyConflictException;
 import com.finops.financial_operations_platform.Exceptions.IdempotencyInProgressException;
 import com.finops.financial_operations_platform.Exceptions.IdempotencyStateException;
 import com.finops.financial_operations_platform.Exceptions.TransactionNotFoundException;
@@ -92,7 +93,7 @@ public class TransactionService {
             case IN_PROGRESS -> throw new IdempotencyInProgressException(
                     "Transaction with this idempotency key is already in progress");
 
-            case CONFLICT -> throw new IdempotencyInProgressException(
+            case CONFLICT -> throw new IdempotencyConflictException(
                     "Idempotency key has already been used for a different request.");
         }
 
