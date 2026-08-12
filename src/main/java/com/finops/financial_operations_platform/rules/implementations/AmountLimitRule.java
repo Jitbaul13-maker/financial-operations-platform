@@ -4,9 +4,11 @@ import com.finops.financial_operations_platform.enums.RuleDecision;
 import com.finops.financial_operations_platform.rules.RuleResult;
 import com.finops.financial_operations_platform.rules.TransactionContext;
 import com.finops.financial_operations_platform.rules.TransactionRule;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 
+@Component
 public class AmountLimitRule implements TransactionRule {
 
     BigDecimal maximumAmount = BigDecimal.valueOf(99999);

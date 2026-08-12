@@ -10,5 +10,4 @@ public record TransactionContext (
         String currency,
         String provider,
         Instant timestamp
-){
-}
+){}

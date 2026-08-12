@@ -6,5 +6,4 @@ public record RuleResult(
         String ruleCode,
         RuleDecision decision,
         String reason
-) {
-}
+) {}

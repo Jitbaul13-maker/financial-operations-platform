@@ -1,4 +1,4 @@
-package com.finops.financial_operations_platform.ruleTests;
+package com.finops.financial_operations_platform.ruletests;
 
 import com.finops.financial_operations_platform.enums.RuleDecision;
 import com.finops.financial_operations_platform.rules.RuleResult;
