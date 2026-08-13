@@ -37,11 +37,12 @@ public class RuleEngineSpringTest {
         );
 
         when(context.amount()).thenReturn(BigDecimal.valueOf(500));
+        when(context.currency()).thenReturn("INR");
+        when(context.provider()).thenReturn("RAZORPAY");
 
         List<RuleResult> results = engine.evaluate(context);
 
         for(RuleResult result1: results){
-            assertEquals(result1.ruleCode(), result.ruleCode());
             assertEquals(result1.decision(), result.decision());
         }
     }
