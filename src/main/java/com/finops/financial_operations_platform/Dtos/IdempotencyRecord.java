@@ -1,4 +1,4 @@
-package com.finops.financial_operations_platform.businesslogics;
+package com.finops.financial_operations_platform.Dtos;
 
 import com.finops.financial_operations_platform.enums.IdempotencyStatus;
 

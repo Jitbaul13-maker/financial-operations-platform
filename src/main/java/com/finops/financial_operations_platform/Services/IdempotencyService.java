@@ -2,7 +2,7 @@ package com.finops.financial_operations_platform.Services;
 
 import com.finops.financial_operations_platform.Dtos.IdempotencyResult;
 import com.finops.financial_operations_platform.Exceptions.IdempotencyStateException;
-import com.finops.financial_operations_platform.businesslogics.IdempotencyRecord;
+import com.finops.financial_operations_platform.Dtos.IdempotencyRecord;
 import com.finops.financial_operations_platform.enums.IdempotencyDecision;
 import com.finops.financial_operations_platform.enums.IdempotencyStatus;
 import org.springframework.data.redis.core.RedisTemplate;

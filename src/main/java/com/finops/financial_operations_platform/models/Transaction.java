@@ -27,6 +27,7 @@ public class Transaction {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Provider provider;
+    @Column(nullable = false)
     private String providerTransactionId;
 
     @Column(nullable = false, precision = 19, scale = 4)

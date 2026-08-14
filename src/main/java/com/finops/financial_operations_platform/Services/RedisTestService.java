@@ -1,6 +1,6 @@
 package com.finops.financial_operations_platform.Services;
 
-import com.finops.financial_operations_platform.businesslogics.IdempotencyRecord;
+import com.finops.financial_operations_platform.Dtos.IdempotencyRecord;
 import com.finops.financial_operations_platform.enums.IdempotencyStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.data.redis.core.RedisTemplate;

@@ -6,8 +6,6 @@ import com.finops.financial_operations_platform.rules.TransactionContext;
 import com.finops.financial_operations_platform.rules.TransactionRule;
 import org.springframework.stereotype.Component;
 
-import java.util.Currency;
-
 @Component
 public class ProviderCurrencyRule implements TransactionRule {
 
@@ -25,7 +23,7 @@ public class ProviderCurrencyRule implements TransactionRule {
 
         if (provider.equals("RAZORPAY") && currency.equals("INR")) return result;
         if (provider.equals("WALLET") && currency.equals("INR")) return result;
-        if (provider.equals("STRIPE") && currency.equals("USD")) return result;
+        if (provider.equals("PAYPAL") && currency.equals("USD")) return result;
 
         return new RuleResult(
                 ruleCode,

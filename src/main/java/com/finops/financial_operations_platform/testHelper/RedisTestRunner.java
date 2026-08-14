@@ -2,11 +2,10 @@ package com.finops.financial_operations_platform.testHelper;
 
 import com.finops.financial_operations_platform.Services.IdempotencyService;
 import com.finops.financial_operations_platform.Services.RedisTestService;
-import com.finops.financial_operations_platform.businesslogics.IdempotencyRecord;
+import com.finops.financial_operations_platform.Dtos.IdempotencyRecord;
 import com.finops.financial_operations_platform.enums.IdempotencyStatus;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Component;
 
 public class RedisTestRunner implements CommandLineRunner {
 

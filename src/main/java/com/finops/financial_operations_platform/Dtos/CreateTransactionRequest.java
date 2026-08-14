@@ -11,6 +11,9 @@ public record CreateTransactionRequest (
     Provider provider,
 
     @NotNull
+    String providerTransactionId,
+
+    @NotNull
     @Positive
     BigDecimal amount,
 

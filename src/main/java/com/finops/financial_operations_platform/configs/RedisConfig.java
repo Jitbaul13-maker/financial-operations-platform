@@ -1,6 +1,6 @@
 package com.finops.financial_operations_platform.configs;
 
-import com.finops.financial_operations_platform.businesslogics.IdempotencyRecord;
+import com.finops.financial_operations_platform.Dtos.IdempotencyRecord;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
