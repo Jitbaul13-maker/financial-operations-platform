@@ -4,7 +4,7 @@ A backend-focused financial operations platform designed to model reliable trans
 
 The project is being developed incrementally, with an emphasis on correctness, explicit state management, testing, observability, and production-oriented engineering practices.
 
-> Status: 🚧 Under active development — Stage 4 completed.
+> **Status:** 🚧 Under active development — Stage 5 completed.
 
 ## Tech Stack
 
@@ -122,6 +122,19 @@ Current capabilities include:
 * Conflict detection for stale updates
 * Tests covering duplicate requests and concurrent update scenarios
 
+### Stage 5 — Business Rule Enforcement ✅
+
+Introduced domain-level financial business rules to prevent invalid transaction operations.
+
+Current capabilities include:
+
+- Transaction amount validation
+- Currency validation
+- Business-rule validation before state changes
+- Prevention of invalid transaction operations
+- Centralized domain/business rule enforcement
+- Tests covering valid and invalid business scenarios
+
 ## Transaction States
 
 | State        | Description                          |
@@ -155,9 +168,10 @@ Stage 0  ✅ Project Bootstrap
 Stage 1  ✅ Transaction Ledger
 Stage 2  ✅ Transaction State Machine
 Stage 3  ✅ Immutable Audit Trail
-Stage 4 ✅ Idempotent Ingestion & Concurrency
-Stage 5 ⏳ Redis Caching Stage
-6+ ⏳ Planned
+Stage 4  ✅ Idempotent Ingestion & Concurrency
+Stage 5  ✅ Business Rule Enforcement
+Stage 6  ⏳ Redis Caching
+Stage 7+ ⏳ Planned
 ```
 
 Future stages will introduce concepts including:
