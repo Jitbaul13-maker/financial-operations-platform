@@ -1,6 +1,8 @@
 package com.finops.financial_operations_platform.rules.implementations;
 
 import com.finops.financial_operations_platform.enums.RuleDecision;
+import com.finops.financial_operations_platform.models.BusinessRule;
+import com.finops.financial_operations_platform.rules.RuleConfigurationService;
 import com.finops.financial_operations_platform.rules.RuleResult;
 import com.finops.financial_operations_platform.rules.TransactionContext;
 import com.finops.financial_operations_platform.rules.TransactionRule;
@@ -11,7 +13,11 @@ import java.math.BigDecimal;
 @Component
 public class AmountLimitRule implements TransactionRule {
 
-    BigDecimal maximumAmount = BigDecimal.valueOf(99999);
+    private final RuleConfigurationService ruleConfigurationService;
+
+    public AmountLimitRule(RuleConfigurationService ruleConfigurationService) {
+        this.ruleConfigurationService = ruleConfigurationService;
+    }
 
     @Override
     public RuleResult evaluate(TransactionContext context) {
@@ -19,7 +25,10 @@ public class AmountLimitRule implements TransactionRule {
         BigDecimal amount = context.amount();
         String ruleCode = "AMOUNT_RULE";
 
-        if (amount.compareTo(maximumAmount) > 0) {
+        BigDecimal maxAmount = ruleConfigurationService
+                .getRequiredDecimal(ruleCode, "maxAmount");
+
+        if (amount.compareTo(maxAmount) > 0) {
             return new RuleResult(
                     ruleCode,
                     RuleDecision.REJECT,

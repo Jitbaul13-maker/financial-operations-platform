@@ -10,29 +10,30 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
 import java.math.BigDecimal;
 
-@ExtendWith(MockitoExtension.class)
-public class AmountLimitRuleTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
+@SpringBootTest
+@ExtendWith(MockitoExtension.class)
+public class AmountLimitRuleSpringTest {
     @Mock
     TransactionContext context;
 
-    @Mock
     RuleConfigurationService configurationService;
 
     @InjectMocks
+    @Autowired
     AmountLimitRule amountLimitRule;
 
     @Test
-    void shouldPassWhenAmountIsBelowLimit(){
-
+    void shouldPassWhenAmountIsBelowLimit() {
         BigDecimal amount = BigDecimal.valueOf(5000);
         when(context.amount()).thenReturn(amount);
-        when(configurationService.getRequiredDecimal("AMOUNT_RULE", "maxAmount"))
-                .thenReturn(BigDecimal.valueOf(10000));
 
         RuleResult result = amountLimitRule.evaluate(context);
 
@@ -41,10 +42,8 @@ public class AmountLimitRuleTest {
 
     @Test
     void shouldFailWhenAmountIsAboveLimit() {
-        BigDecimal amount = BigDecimal.valueOf(500000);
+        BigDecimal amount = BigDecimal.valueOf(5000000);
         when(context.amount()).thenReturn(amount);
-        when(configurationService.getRequiredDecimal("AMOUNT_RULE", "maxAmount"))
-                .thenReturn(BigDecimal.valueOf(10000));
 
         RuleResult result = amountLimitRule.evaluate(context);
 
