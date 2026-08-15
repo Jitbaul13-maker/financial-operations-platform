@@ -94,4 +94,16 @@ public class GlobalExceptionHandler {
                 )
         );
     }
+
+    @ExceptionHandler(TransactionRuleRejectedException.class)
+    public ResponseEntity<ExceptionResponse> transactionRuleRejectedException(TransactionRuleRejectedException ex) {
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_CONTENT).body(
+                new ExceptionResponse(
+                        ex.getMessage(),
+                        HttpStatus.UNPROCESSABLE_CONTENT.value(),
+                        "Transaction rejected by business rules.",
+                        OffsetDateTime.now()
+                )
+        );
+    }
 }

@@ -3,19 +3,23 @@ package com.finops.financial_operations_platform.Services;
 import com.finops.financial_operations_platform.Dtos.CreateTransactionRequest;
 import com.finops.financial_operations_platform.Dtos.IdempotencyResult;
 import com.finops.financial_operations_platform.Dtos.TransactionResponse;
-import com.finops.financial_operations_platform.Exceptions.IdempotencyConflictException;
-import com.finops.financial_operations_platform.Exceptions.IdempotencyInProgressException;
-import com.finops.financial_operations_platform.Exceptions.IdempotencyStateException;
-import com.finops.financial_operations_platform.Exceptions.TransactionNotFoundException;
+import com.finops.financial_operations_platform.Exceptions.*;
 import com.finops.financial_operations_platform.businesslogics.TransactionStateMachine;
+import com.finops.financial_operations_platform.enums.RuleDecision;
 import com.finops.financial_operations_platform.enums.TransactionStatus;
 import com.finops.financial_operations_platform.models.Transaction;
 import com.finops.financial_operations_platform.repos.TransactionRepository;
+import com.finops.financial_operations_platform.rules.RuleEngine;
+import com.finops.financial_operations_platform.rules.RuleResult;
+import com.finops.financial_operations_platform.rules.TransactionContext;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -26,17 +30,17 @@ public class TransactionService {
     private final AuditLogService auditLogService;
     private final IdempotencyService idempotencyService;
     private final RequestFingerprintService fingerprintService;
+    private final RuleEngine ruleEngine;
 
-    public TransactionService(TransactionRepository transactionRepository,
-                              TransactionStateMachine stateMachine,
-                              AuditLogService auditLogService,
-                              IdempotencyService idempotencyService,
-                              RequestFingerprintService fingerprintService) {
+    public TransactionService(TransactionRepository transactionRepository, TransactionStateMachine stateMachine,
+                              AuditLogService auditLogService, IdempotencyService idempotencyService,
+                              RequestFingerprintService fingerprintService, RuleEngine ruleEngine) {
         this.transactionRepository = transactionRepository;
         this.stateMachine = stateMachine;
         this.auditLogService = auditLogService;
         this.idempotencyService = idempotencyService;
         this.fingerprintService = fingerprintService;
+        this.ruleEngine = ruleEngine;
     }
 
     private TransactionResponse mapToResponse(Transaction tx) {
@@ -65,10 +69,30 @@ public class TransactionService {
                 tx.setCustomerId(req.customerId());
                 tx.setAmount(req.amount());
                 tx.setProvider(req.provider());
+                tx.setProviderTransactionId(req.providerTransactionId());
                 tx.setCurrency(req.currency().toUpperCase());
 
                 tx.setTransactionId("TXN-" + UUID.randomUUID());
                 tx.setStatus(TransactionStatus.INITIATED);
+
+                TransactionContext context = new TransactionContext(
+                        tx.getTransactionId(),
+                        tx.getProviderTransactionId(),
+                        tx.getCustomerId(),
+                        tx.getAmount(),
+                        tx.getCurrency(),
+                        tx.getProvider(),
+                        Instant.now()
+                );
+
+                List<RuleResult> ruleResult = ruleEngine.evaluate(context);
+
+                for(RuleResult ruleResult1: ruleResult) {
+                    if (ruleResult1.decision() == RuleDecision.REJECT) {
+                        throw new TransactionRuleRejectedException("Transaction rejected by business rule: "
+                                + ruleResult1.ruleCode());
+                    }
+                }
 
                 Transaction saved_tx = transactionRepository.save(tx);
                 auditLogService.recordAudit(saved_tx.getTransactionId(), null,

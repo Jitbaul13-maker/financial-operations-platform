@@ -1,5 +1,6 @@
 package com.finops.financial_operations_platform.ruletests;
 
+import com.finops.financial_operations_platform.enums.Provider;
 import com.finops.financial_operations_platform.enums.RuleDecision;
 import com.finops.financial_operations_platform.rules.RuleEngine;
 import com.finops.financial_operations_platform.rules.RuleResult;
@@ -47,7 +48,7 @@ public class RuleEngineSpringTest {
 
         when(context.amount()).thenReturn(BigDecimal.valueOf(500));
         when(context.currency()).thenReturn("INR");
-        when(context.provider()).thenReturn("RAZORPAY");
+        when(context.provider()).thenReturn(Provider.RAZORPAY);
         when(context.customerId()).thenReturn("Test-123");
 
         List<RuleResult> results = engine.evaluate(context);
