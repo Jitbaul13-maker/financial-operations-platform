@@ -32,11 +32,11 @@ public class VelocityCounterTest {
         when(details.opsForValue()).thenReturn(valueOperations);
         when(valueOperations.increment("Test-123")).thenReturn(1L);
 
-        Long count = service.incrementCounter("Test-123");
+        Long count = service.incrementCounter("Test-123", 1L);
 
         assertEquals(1, count);
         verify(valueOperations).increment("Test-123");
-        verify(details).expire("Test-123", Duration.ofSeconds(60));
+        verify(details).expire("Test-123", Duration.ofMinutes(1));
     }
 
     @Test
@@ -44,10 +44,10 @@ public class VelocityCounterTest {
         when(details.opsForValue()).thenReturn(valueOperations);
         when(valueOperations.increment("Test-123")).thenReturn(2L);
 
-        Long count = service.incrementCounter("Test-123");
+        Long count = service.incrementCounter("Test-123", 1L);
 
         assertEquals(2, count);
         verify(valueOperations).increment("Test-123");
-        verify(details, never()).expire("Test-123", Duration.ofSeconds(60));
+        verify(details, never()).expire("Test-123", Duration.ofMinutes(1));
     }
 }

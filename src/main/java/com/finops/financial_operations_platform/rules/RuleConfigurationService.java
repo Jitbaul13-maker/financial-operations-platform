@@ -90,4 +90,17 @@ public class RuleConfigurationService {
 
         return convertToStringListMap((Map<?, ?>) value);
     }
+
+    public Long getRequiredLong(String ruleCode, String key){
+        BusinessRule rule = findRule(ruleCode);
+        Object value = rule.getConfiguration().get(key);
+
+        if (!(value instanceof Number)) {
+            throw new InvalidBusinessRuleConfigurationException(
+                    "Configuration " + key + " for rule " + ruleCode + " must be numeric"
+            );
+        }
+
+        return ((Number) value).longValue();
+    }
 }

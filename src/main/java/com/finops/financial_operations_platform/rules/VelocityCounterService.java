@@ -10,16 +10,19 @@ public class VelocityCounterService {
 
     private final RedisTemplate<String, String> details;
 
+
     public VelocityCounterService(RedisTemplate<String, String> details) {
         this.details = details;
     }
 
-    public long incrementCounter(String customerId) {
+    String ruleCode = "VELOCITY_RULE";
+
+    public long incrementCounter(String customerId, Long windowMinutes) {
 
         long count = details.opsForValue().increment(customerId);
 
         if (count == 1) {
-            details.expire(customerId, Duration.ofSeconds(60));
+            details.expire(customerId, Duration.ofMinutes(windowMinutes));
         }
 
         return count;

@@ -44,7 +44,7 @@ public class RuleEngineSpringTest {
                 "Test"
         );
 
-        when(counterService.incrementCounter("Test-123")).thenReturn(4L);
+        when(counterService.incrementCounter("Test-123", 1L)).thenReturn(4L);
 
         when(context.amount()).thenReturn(BigDecimal.valueOf(500));
         when(context.currency()).thenReturn("INR");
