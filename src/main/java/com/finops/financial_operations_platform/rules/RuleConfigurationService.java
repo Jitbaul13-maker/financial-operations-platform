@@ -8,6 +8,9 @@ import com.finops.financial_operations_platform.repos.BusinessRuleRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class RuleConfigurationService {
@@ -17,7 +20,7 @@ public class RuleConfigurationService {
         this.ruleRepository = ruleRepository;
     }
 
-    public BusinessRule findRule(String rule_code) {
+    private BusinessRule findRule(String rule_code) {
         BusinessRule rule = ruleRepository.findByRuleCode(rule_code)
                 .orElseThrow(() -> new BusinessRuleNotFoundException(
                         "No business rule found associated with rule code: " + rule_code));
@@ -27,6 +30,39 @@ public class RuleConfigurationService {
         }
 
         return rule;
+    }
+
+    private Map<String, List<String>> convertToStringListMap(Map<?, ?> map) {
+
+        Map<String, List<String>> result = new HashMap<>();
+
+        for (Map.Entry<?, ?> entry : map.entrySet()){
+            if (!(entry.getKey() instanceof String)) {
+                throw new InvalidBusinessRuleConfigurationException(
+                        "Inner key for rule must be String"
+                );
+            }
+
+            if (!(entry.getValue() instanceof List<?> values)) {
+                throw new InvalidBusinessRuleConfigurationException(
+                            "Inner key value must be a list of String"
+                );
+            }
+
+            for (Object value : values) {
+                if (!(value instanceof String)) {
+                    throw new InvalidBusinessRuleConfigurationException(
+                                "Inner key value must be a String"
+                    );
+                }
+            }
+
+            List<String> valueList = values.stream().map(value -> (String)value).toList();
+
+            result.put((String) entry.getKey(), valueList);
+        }
+
+        return result;
     }
 
     public BigDecimal getRequiredDecimal(String ruleCode, String key) {
@@ -40,5 +76,18 @@ public class RuleConfigurationService {
         }
 
         return new BigDecimal(value.toString());
+    }
+
+    public Map<String, List<String>> getRequiredMap(String ruleCode, String key) {
+        BusinessRule rule = findRule(ruleCode);
+        Object value = rule.getConfiguration().get(key);
+
+        if (!(value instanceof Map<?,?>)) {
+            throw new InvalidBusinessRuleConfigurationException(
+                    "Configuration " + key + " for rule " + ruleCode + " must be map"
+            );
+        }
+
+        return convertToStringListMap((Map<?, ?>) value);
     }
 }
