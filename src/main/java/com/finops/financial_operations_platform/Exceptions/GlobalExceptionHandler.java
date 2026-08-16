@@ -106,4 +106,43 @@ public class GlobalExceptionHandler {
                 )
         );
     }
+
+    @ExceptionHandler(InvalidBusinessRuleConfigurationException.class)
+    public ResponseEntity<ExceptionResponse> invalidBusinessRuleConfigurationException
+            (InvalidBusinessRuleConfigurationException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                new ExceptionResponse(
+                        ex.getMessage(),
+                        HttpStatus.BAD_REQUEST.value(),
+                        "Invalid business rule configuration.",
+                        OffsetDateTime.now()
+                )
+        );
+    }
+
+    @ExceptionHandler(InactiveBusinessRuleException.class)
+    public ResponseEntity<ExceptionResponse> inactiveBusinessRuleException
+            (InactiveBusinessRuleException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                new ExceptionResponse(
+                        ex.getMessage(),
+                        HttpStatus.CONTINUE.value(),
+                        "Business rule is inactive.",
+                        OffsetDateTime.now()
+                )
+        );
+    }
+
+    @ExceptionHandler(BusinessRuleNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> businessRuleNotFoundException
+            (BusinessRuleNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ExceptionResponse(
+                        ex.getMessage(),
+                        HttpStatus.NOT_FOUND.value(),
+                        "Invalid business rule configuration.",
+                        OffsetDateTime.now()
+                )
+        );
+    }
 }
