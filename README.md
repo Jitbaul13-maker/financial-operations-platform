@@ -93,11 +93,6 @@ The transaction core currently provides:
 * **Configurable policies** — financial rules can be adjusted without changing the transaction processing flow.
 * **Atomic persistence** — transaction state changes and their corresponding audit records are persisted together.
 
-```
-```
-
-These mechanisms provide the foundation for safely handling retries and concurrent requests as the platform evolves toward asynchronous and distributed processing.
-
 ## Implemented Features
 
 ### Stage 0 — Project Bootstrap ✅
@@ -233,7 +228,7 @@ Stage 2  ✅ Transaction State Machine
 Stage 3  ✅ Immutable Audit Trail
 Stage 4  ✅ Idempotent Ingestion & Concurrency
 Stage 5  ✅ Business Rule Enforcement
-Stage 6  ⏳ Configurable Business Rules
+Stage 6  ✅ Configurable Business Rules
 Stage 7+ ⏳ Planned
 ```
 
@@ -307,9 +302,9 @@ The architecture will evolve as these requirements are introduced.
 
 ## Project Status
 
-**Current milestone: Stage 4 completed.**
+**Current milestone: Stage 6 completed.**
 
-The next milestone focuses on introducing **Redis caching** into the transaction platform.
+The next milestone focuses on introducing **External Provider Ledger** into the transaction platform.
 
 ---
 
