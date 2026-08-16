@@ -4,7 +4,7 @@ A backend-focused financial operations platform designed to model reliable trans
 
 The project is being developed incrementally, with an emphasis on correctness, explicit state management, testing, observability, and production-oriented engineering practices.
 
-> **Status:** 🚧 Under active development — Stage 5 completed.
+> **Status:** 🚧 Under active development — Stage 6 completed.
 
 ## Tech Stack
 
@@ -23,28 +23,77 @@ Additional infrastructure and distributed-system components will be introduced a
 
 ## Current Architecture
 
-The application currently follows a modular monolith architecture.
+The application currently follows a **modular monolith** architecture.
 
-The transaction core now provides:
+The transaction processing flow now provides idempotent ingestion, concurrency protection, state-machine enforcement, immutable auditing, and configurable business-rule validation.
+
+```text
+                         Transaction Request
+                                  │
+                                  ▼
+                         ┌─────────────────┐
+                         │ Idempotency     │
+                         │ Check           │
+                         └────────┬────────┘
+                                  │
+                    ┌─────────────┴─────────────┐
+                    │                           │
+                Duplicate                  New Request
+                    │                           │
+                    ▼                           ▼
+             Return Existing          Business Rule Evaluation
+             Transaction                       │
+                                      ┌────────┴────────┐
+                                      │                 │
+                                   Rejected          Accepted
+                                      │                 │
+                                      ▼                 ▼
+                                  Reject        Transaction Processing
+                                                        │
+                                                        ▼
+                                               State Transition
+                                                        │
+                                               ┌────────┴────────┐
+                                               │                 │
+                                          Invalid State     Valid State
+                                               │                 │
+                                               ▼                 ▼
+                                            Reject       Optimistic Lock
+                                                                 │
+                                                        ┌────────┴────────┐
+                                                        │                 │
+                                                  Version Conflict    Success
+                                                        │                 │
+                                                        ▼                 ▼
+                                                     Reject       State + Audit
+                                                                      │
+                                                                      ▼
+                                                               Persist Changes
+```
+
+### Business Rules
+
+Transaction acceptance is governed by configurable policies including:
+
+* Transaction amount limits
+* Transaction velocity limits
+* Provider-specific rules
+
+These rules are evaluated before transaction processing and can be changed through configuration without modifying the core transaction workflow.
+
+### Consistency Guarantees
+
+The transaction core currently provides:
+
+* **Idempotency** — duplicate requests do not create duplicate transactions.
+* **Optimistic locking** — concurrent updates are protected from stale writes.
+* **State-machine enforcement** — only valid transaction state transitions are permitted.
+* **Immutable auditing** — state changes are recorded in an append-only audit trail.
+* **Business-rule enforcement** — invalid transactions are rejected before processing.
+* **Configurable policies** — financial rules can be adjusted without changing the transaction processing flow.
+* **Atomic persistence** — transaction state changes and their corresponding audit records are persisted together.
 
 ```
-Transaction Request
-       │
-       ▼
-Idempotency Check
-       │
-       ├── Duplicate → Return existing transaction
-       │
-       ▼
-Transaction Processing
-       │
-       ▼
-Optimistic Locking
-       │
-       ├── Version Conflict → Reject update
-       │
-       ▼
-State + Audit Update
 ```
 
 These mechanisms provide the foundation for safely handling retries and concurrent requests as the platform evolves toward asynchronous and distributed processing.
@@ -135,6 +184,20 @@ Current capabilities include:
 - Centralized domain/business rule enforcement
 - Tests covering valid and invalid business scenarios
 
+### Stage 6 — Configurable Business Rules ✅
+
+Introduced configurable business rules for transaction validation, allowing financial policies to be changed without modifying the core transaction processing flow.
+
+Current rules include:
+
+- Configurable transaction amount limits
+- Transaction velocity limits
+- Provider-specific rules
+- Centralized business rule evaluation
+- Rule-driven transaction acceptance/rejection
+- Configuration-based policy enforcement
+- Tests covering rule evaluation and rejection scenarios
+
 ## Transaction States
 
 | State        | Description                          |
@@ -170,7 +233,7 @@ Stage 2  ✅ Transaction State Machine
 Stage 3  ✅ Immutable Audit Trail
 Stage 4  ✅ Idempotent Ingestion & Concurrency
 Stage 5  ✅ Business Rule Enforcement
-Stage 6  ⏳ Redis Caching
+Stage 6  ⏳ Configurable Business Rules
 Stage 7+ ⏳ Planned
 ```
 
@@ -228,6 +291,9 @@ This project is intended to explore the engineering challenges involved in build
 * Transaction correctness
 * Explicit lifecycle management
 * Idempotency
+*  Configurable financial policies
+* Rule-driven transaction validation
+* Provider-specific business constraints
 * Concurrent updates
 * Event-driven processing
 * Failure recovery
