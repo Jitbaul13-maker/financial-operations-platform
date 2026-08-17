@@ -4,7 +4,7 @@ A backend-focused financial operations platform designed to model reliable trans
 
 The project is being developed incrementally, with an emphasis on correctness, explicit state management, testing, observability, and production-oriented engineering practices.
 
-> **Status:** 🚧 Under active development — Stage 6 completed.
+> **Status:** 🚧 Under active development — Stage 7 completed.
 
 ## Tech Stack
 
@@ -21,55 +21,75 @@ The project is being developed incrementally, with an emphasis on correctness, e
 
 Additional infrastructure and distributed-system components will be introduced as the project progresses.
 
-## Current Architecture
+##  Current Architecture
 
-The application currently follows a **modular monolith** architecture.
+The application continues to follow a **modular monolith architecture**.
 
-The transaction processing flow now provides idempotent ingestion, concurrency protection, state-machine enforcement, immutable auditing, and configurable business-rule validation.
+The transaction flow now consists of an internal ledger, configurable business rules, an independent provider ledger, and an audit trail.
 
 ```text
+
                          Transaction Request
                                   │
                                   ▼
                          ┌─────────────────┐
-                         │ Idempotency     │
-                         │ Check           │
+                         │   Idempotency   │
+                         │   Check         │
                          └────────┬────────┘
                                   │
-                    ┌─────────────┴─────────────┐
-                    │                           │
-                Duplicate                  New Request
-                    │                           │
-                    ▼                           ▼
-             Return Existing          Business Rule Evaluation
-             Transaction                       │
-                                      ┌────────┴────────┐
-                                      │                 │
-                                   Rejected          Accepted
-                                      │                 │
-                                      ▼                 ▼
-                                  Reject        Transaction Processing
-                                                        │
-                                                        ▼
-                                               State Transition
-                                                        │
-                                               ┌────────┴────────┐
-                                               │                 │
-                                          Invalid State     Valid State
-                                               │                 │
-                                               ▼                 ▼
-                                            Reject       Optimistic Lock
-                                                                 │
-                                                        ┌────────┴────────┐
-                                                        │                 │
-                                                  Version Conflict    Success
-                                                        │                 │
-                                                        ▼                 ▼
-                                                     Reject       State + Audit
-                                                                      │
-                                                                      ▼
-                                                               Persist Changes
+                         Business Rule Engine
+                                  │
+                         ┌────────┴────────┐
+                         │                 │
+                      Rejected          Accepted
+                         │                 │
+                         ▼                 ▼
+                      Reject        Transaction Processing
+                                           │
+                                           ▼
+                                  State Machine
+                                           │
+                                  ┌────────┴────────┐
+                                  │                 │
+                              Invalid            Valid
+                                  │                 │
+                                  ▼                 ▼
+                               Reject       Optimistic Lock
+                                                   │
+                                                   ▼
+                                            State + Audit
+                                                   │
+                                                   ▼
+                                          Internal Ledger
+                                                   │
+                                                   │
+                              ┌────────────────────┘
+                              │
+                              │       Independent Source
+                              │              │
+                              │              ▼
+                              │      ┌─────────────────┐
+                              │      │ Provider Ledger │
+                              │      │                 │
+                              │      │    Razorpay     │
+                              │      │     PayPal       │
+                              │      │    Wallet       │
+                              │      └────────┬────────┘
+                              │               │
+                              ▼               ▼
+                        Internal Ledger   Provider Ledger
+                              │               │
+                              └───────┬───────┘
+                                      │
+                                      ▼
+                              Stage 8: Reconciliation
 ```
+
+The key architectural boundary is:
+
+Internal Ledger ≠ Provider Ledger
+
+They are independent sources of financial truth for their respective systems. Reconciliation will determine where they agree, where they disagree, and how those discrepancies should be classified.
 
 ### Business Rules
 
@@ -193,6 +213,28 @@ Current rules include:
 - Configuration-based policy enforcement
 - Tests covering rule evaluation and rejection scenarios
 
+### Stage 7 — External Provider Ledger ✅
+
+Introduced an independently sourced provider ledger to represent external financial records.
+
+The provider ledger is intentionally independent from the internal transaction ledger and can contain differences that must later be detected and reconciled.
+
+Current capabilities include:
+
+- Separate provider_transaction ledger
+- Provider statement import/parsing
+- Mock provider data for Razorpay, PayPal, and wallet sources
+- Provider-specific status normalization
+- Independent provider transaction records
+- Support for intentionally inconsistent provider data
+- Missing records
+- Amount mismatches
+- Status mismatches
+- Timestamp differences
+- Duplicate provider records
+
+The provider ledger is not generated from the internal ledger. Both ledgers can be populated independently, allowing the system to model real-world financial discrepancies.
+
 ## Transaction States
 
 | State        | Description                          |
@@ -229,7 +271,9 @@ Stage 3  ✅ Immutable Audit Trail
 Stage 4  ✅ Idempotent Ingestion & Concurrency
 Stage 5  ✅ Business Rule Enforcement
 Stage 6  ✅ Configurable Business Rules
-Stage 7+ ⏳ Planned
+Stage 7  ✅ External Provider Ledger
+Stage 8  ⏳ Reconciliation Engine
+Stage 9+ ⏳ Planned
 ```
 
 Future stages will introduce concepts including:
@@ -286,7 +330,7 @@ This project is intended to explore the engineering challenges involved in build
 * Transaction correctness
 * Explicit lifecycle management
 * Idempotency
-*  Configurable financial policies
+* Configurable financial policies
 * Rule-driven transaction validation
 * Provider-specific business constraints
 * Concurrent updates
@@ -302,9 +346,9 @@ The architecture will evolve as these requirements are introduced.
 
 ## Project Status
 
-**Current milestone: Stage 6 completed.**
+**Current milestone: Stage 7 completed.**
 
-The next milestone focuses on introducing **External Provider Ledger** into the transaction platform.
+The next milestone focuses on introducing **Reconciliation** into the transaction platform.
 
 ---
 
