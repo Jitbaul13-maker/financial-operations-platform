@@ -10,7 +10,14 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
 @Entity
-@Table(name = "transactions")
+@Table(name = "transactions",
+uniqueConstraints = {
+        @UniqueConstraint(
+                name = "uk_transactions_transaction_id",
+                columnNames = {"transactionId"}
+        )
+    }
+)
 @Getter
 @Setter
 public class Transaction {
@@ -19,7 +26,7 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "transaction_id", nullable = false, unique = true)
     private String transactionId;
     @Column(unique = true, nullable = false)
     private String idempotencyKey;
