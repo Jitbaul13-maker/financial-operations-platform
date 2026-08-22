@@ -1,4 +1,4 @@
-package com.finops.financial_operations_platform.Services;
+package com.finops.financial_operations_platform.externalLedger;
 
 import org.springframework.stereotype.Component;
 

@@ -1,6 +1,5 @@
-package com.finops.financial_operations_platform.Controllers;
+package com.finops.financial_operations_platform.externalLedger;
 
-import com.finops.financial_operations_platform.Services.ProviderStatementImportService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
