@@ -8,6 +8,7 @@ import com.finops.financial_operations_platform.reconcilliationEngine.enums.Reco
 import com.finops.financial_operations_platform.reconcilliationEngine.models.ReconciliationResult;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,6 +65,7 @@ public class ReconciliationMatcher {
 
         Transaction txn = transactions.getFirst();
         String status = normalizer.normalize(providerTransaction.getProvider(), providerTransaction.getStatus());
+        Duration difference = Duration.between(txn.getCreatedAt(), providerTransaction.getCreatedAt()).abs();
 
         if (txn.getStatus().name().equals(status)) {
             remarks.add("status ✅");
@@ -108,6 +110,12 @@ public class ReconciliationMatcher {
             }
 
             remarks.add("currency mismatch: " + txn.getCurrency() + ", " + providerTransaction.getCurrency());
+        }
+
+        if (difference.compareTo(Duration.ofSeconds(30)) <= 0) {
+            remarks.add("time ✅");
+        } else {
+            remarks.add("time mismatch: " + txn.getCreatedAt() + ", " + providerTransaction.getCreatedAt());
         }
 
         String remark = String.join("; ", remarks);

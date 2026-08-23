@@ -3,9 +3,13 @@ package com.finops.financial_operations_platform.reconcilliationEngine.models;
 import com.finops.financial_operations_platform.reconcilliationEngine.enums.ReconciliationResultType;
 import com.finops.financial_operations_platform.reconcilliationEngine.enums.ReconciliationSeverity;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "reconciliation_result")
+@NoArgsConstructor
+@Getter
 public class ReconciliationResult {
 
     public ReconciliationResult(String internalTransactionId, String providerTransactionId,
@@ -39,5 +43,5 @@ public class ReconciliationResult {
     @Column(nullable = false)
     private ReconciliationSeverity severity;
 
-    private final String remarks;
+    private String remarks;
 }
