@@ -4,7 +4,7 @@ A backend-focused financial operations platform designed to model reliable trans
 
 The project is being developed incrementally, with an emphasis on correctness, explicit state management, testing, observability, and production-oriented engineering practices.
 
-> **Status:** 🚧 Under active development — Stage 7 completed.
+> **Status:** 🚧 Under active development — Stage 8 completed.
 
 ## Tech Stack
 
@@ -44,10 +44,10 @@ The transaction flow now consists of an internal ledger, configurable business r
                       Rejected          Accepted
                          │                 │
                          ▼                 ▼
-                      Reject        Transaction Processing
+                      Reject     Transaction Processing
                                            │
                                            ▼
-                                  State Machine
+                                      State Machine
                                            │
                                   ┌────────┴────────┐
                                   │                 │
@@ -57,10 +57,10 @@ The transaction flow now consists of an internal ledger, configurable business r
                                Reject       Optimistic Lock
                                                    │
                                                    ▼
-                                            State + Audit
+                                              State + Audit
                                                    │
-                                                   ▼
-                                          Internal Ledger
+                                                   |
+                                                   |
                                                    │
                                                    │
                               ┌────────────────────┘
@@ -72,7 +72,7 @@ The transaction flow now consists of an internal ledger, configurable business r
                               │      │ Provider Ledger │
                               │      │                 │
                               │      │    Razorpay     │
-                              │      │     PayPal       │
+                              │      │     PayPal      │
                               │      │    Wallet       │
                               │      └────────┬────────┘
                               │               │
@@ -82,7 +82,21 @@ The transaction flow now consists of an internal ledger, configurable business r
                               └───────┬───────┘
                                       │
                                       ▼
-                              Stage 8: Reconciliation
+                             ┌──────────────────┐
+                             │  Reconciliation  │
+                             │      Engine      │
+                             └────────┬─────────┘
+                                      │
+                        ┌─────────────┼─────────────┐
+                        │             │             │
+                        ▼             ▼             ▼
+                    MATCHED       MISMATCHED     MISSING
+                                      │
+                                      ▼
+                             Reconciliation Result
+                                      │
+                                      ▼
+                             Persist / Investigate
 ```
 
 The key architectural boundary is:
@@ -235,6 +249,28 @@ Current capabilities include:
 
 The provider ledger is not generated from the internal ledger. Both ledgers can be populated independently, allowing the system to model real-world financial discrepancies.
 
+### Stage 8 — Reconciliation Engine ✅
+
+Implemented the reconciliation engine that compares the internal transaction ledger against the independent provider ledger.
+
+The engine identifies and classifies discrepancies between the two sources without assuming that either ledger is automatically correct.
+
+Current capabilities include:
+
+- Internal vs. provider ledger comparison
+- Transaction matching
+- Missing internal transactions
+- Missing provider transactions
+- Amount mismatches
+- Status mismatches
+- Timestamp differences
+- Duplicate provider records
+- Reconciliation result classification
+- Persistence of reconciliation results
+- Reconciliation history and reporting
+
+The provider ledger remains an independent source and is intentionally allowed to disagree with the internal ledger. Reconciliation surfaces these differences for investigation rather than silently modifying either source.
+
 ## Transaction States
 
 | State        | Description                          |
@@ -272,8 +308,9 @@ Stage 4  ✅ Idempotent Ingestion & Concurrency
 Stage 5  ✅ Business Rule Enforcement
 Stage 6  ✅ Configurable Business Rules
 Stage 7  ✅ External Provider Ledger
-Stage 8  ⏳ Reconciliation Engine
-Stage 9+ ⏳ Planned
+Stage 8  ✅ Reconciliation Engine
+Stage 9  ⏳ Reconciliation Scheduling & Alerts
+Stage 10+ ⏳ Planned
 ```
 
 Future stages will introduce concepts including:
@@ -346,9 +383,9 @@ The architecture will evolve as these requirements are introduced.
 
 ## Project Status
 
-**Current milestone: Stage 7 completed.**
+**Current milestone: Stage 8 completed.**
 
-The next milestone focuses on introducing **Reconciliation** into the transaction platform.
+The next milestone focuses on introducing **Reconciliation Scheduler** into the transaction platform.
 
 ---
 
