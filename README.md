@@ -101,7 +101,7 @@ The transaction flow now consists of an internal ledger, configurable business r
 
 The key architectural boundary is:
 
-Internal Ledger ≠ Provider Ledger
+**Internal Ledger ≠ Provider Ledger**
 
 They are independent sources of financial truth for their respective systems. Reconciliation will determine where they agree, where they disagree, and how those discrepancies should be classified.
 
