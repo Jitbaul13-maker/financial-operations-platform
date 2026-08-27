@@ -1,15 +1,17 @@
-package com.finops.financial_operations_platform.reconcilliationEngine.models;
+package com.finops.financial_operations_platform.reconciliationEngine.models;
 
-import com.finops.financial_operations_platform.reconcilliationEngine.enums.ReconciliationResultType;
-import com.finops.financial_operations_platform.reconcilliationEngine.enums.ReconciliationSeverity;
+import com.finops.financial_operations_platform.reconciliationEngine.enums.ReconciliationResultType;
+import com.finops.financial_operations_platform.reconciliationEngine.enums.ReconciliationSeverity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "reconciliation_result")
 @NoArgsConstructor
 @Getter
+@Setter
 public class ReconciliationResult {
 
     public ReconciliationResult(String internalTransactionId, String providerTransactionId,

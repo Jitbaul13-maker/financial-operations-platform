@@ -1,4 +1,4 @@
-package com.finops.financial_operations_platform.reconcilliationEngine.enums;
+package com.finops.financial_operations_platform.reconciliationEngine.enums;
 
 import lombok.Getter;
 

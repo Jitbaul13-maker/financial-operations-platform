@@ -1,7 +1,7 @@
-package com.finops.financial_operations_platform.reconcilliationEngine.controller;
+package com.finops.financial_operations_platform.reconciliationEngine.controller;
 
-import com.finops.financial_operations_platform.reconcilliationEngine.models.ReconciliationResult;
-import com.finops.financial_operations_platform.reconcilliationEngine.service.ReconciliationService;
+import com.finops.financial_operations_platform.reconciliationEngine.models.ReconciliationResult;
+import com.finops.financial_operations_platform.reconciliationEngine.service.ReconciliationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,8 +22,8 @@ public class ReconciliationController {
 
         ReconciliationResult result = reconciliationService.reconcile(
                 provider,
-                transactionId,
-                providerTransactionId
+                providerTransactionId,
+                1L
         );
 
         return ResponseEntity.ok(result);

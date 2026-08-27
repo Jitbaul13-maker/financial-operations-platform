@@ -28,7 +28,7 @@ public class ProviderStatementParser {
 
             for(CSVRecord record : parser) {
                 ProviderStatementRow row = new ProviderStatementRow(
-                        record.get("provider"),
+                        record.get("provider").trim().toUpperCase(),
                         record.get("providerTransactionId"),
                         new BigDecimal(record.get("amount")),
                         record.get("currency"),

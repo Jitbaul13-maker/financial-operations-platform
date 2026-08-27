@@ -1,11 +1,11 @@
-package com.finops.financial_operations_platform.reconcilliationEngine.rules;
+package com.finops.financial_operations_platform.reconciliationEngine.rules;
 
 import com.finops.financial_operations_platform.externalLedger.ProviderStatusNormalizer;
 import com.finops.financial_operations_platform.models.ProviderTransaction;
 import com.finops.financial_operations_platform.models.Transaction;
-import com.finops.financial_operations_platform.reconcilliationEngine.enums.ReconciliationResultType;
-import com.finops.financial_operations_platform.reconcilliationEngine.enums.ReconciliationSeverity;
-import com.finops.financial_operations_platform.reconcilliationEngine.models.ReconciliationResult;
+import com.finops.financial_operations_platform.reconciliationEngine.enums.ReconciliationResultType;
+import com.finops.financial_operations_platform.reconciliationEngine.enums.ReconciliationSeverity;
+import com.finops.financial_operations_platform.reconciliationEngine.models.ReconciliationResult;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
@@ -49,16 +49,6 @@ public class ReconciliationMatcher {
 
     public ReconciliationResult matcher(ProviderTransaction providerTransaction, List<Transaction> transactions) {
 
-        if (transactions.size() > 1) {
-            return new ReconciliationResult(
-                    null,
-                    providerTransaction.getProviderTransactionId(),
-                    ReconciliationResultType.DUPLICATE,
-                    ReconciliationSeverity.HIGH,
-                    "Duplicate internal records detected!"
-            );
-        }
-
         List<String> remarks = new ArrayList<>();
         ReconciliationSeverity severity = ReconciliationSeverity.NONE;
         ReconciliationResultType resultType = ReconciliationResultType.MATCHED;
@@ -73,8 +63,7 @@ public class ReconciliationMatcher {
             ReconciliationSeverity newSeverity = ReconciliationSeverity.MEDIUM;
             ReconciliationResultType newResultType = ReconciliationResultType.STATUS_MISMATCH;
 
-            if (shouldReplace(resultType, severity,
-                    newResultType, newSeverity)) {
+            if (shouldReplace(resultType, severity, newResultType, newSeverity)) {
                 resultType = newResultType;
                 severity = newSeverity;
             }
@@ -88,8 +77,7 @@ public class ReconciliationMatcher {
             ReconciliationSeverity newSeverity = ReconciliationSeverity.CRITICAL;
             ReconciliationResultType newResultType = ReconciliationResultType.AMOUNT_MISMATCH;
 
-            if (shouldReplace(resultType, severity,
-                    newResultType, newSeverity)) {
+            if (shouldReplace(resultType, severity, newResultType, newSeverity)) {
                 resultType = newResultType;
                 severity = newSeverity;
             }
@@ -103,8 +91,7 @@ public class ReconciliationMatcher {
             ReconciliationSeverity newSeverity = ReconciliationSeverity.CRITICAL;
             ReconciliationResultType newResultType = ReconciliationResultType.CURRENCY_MISMATCH;
 
-            if (shouldReplace(resultType, severity,
-                    newResultType, newSeverity)) {
+            if (shouldReplace(resultType, severity, newResultType, newSeverity)) {
                 resultType = newResultType;
                 severity = newSeverity;
             }
