@@ -4,7 +4,7 @@ A backend-focused financial operations platform designed to model reliable trans
 
 The project is being developed incrementally, with an emphasis on correctness, explicit state management, testing, observability, and production-oriented engineering practices.
 
-> **Status:** 🚧 Under active development — Stage 8 completed.
+> **Status:** 🚧 Under active development — Stage 9 completed.
 
 ## Tech Stack
 
@@ -271,6 +271,44 @@ Current capabilities include:
 
 The provider ledger remains an independent source and is intentionally allowed to disagree with the internal ledger. Reconciliation surfaces these differences for investigation rather than silently modifying either source.
 
+### Stage 9 — Scheduled Reconciliation ✅
+
+Reconciliation can now run automatically on a fixed 12-hour schedule, removing the need for manual reconciliation triggers.
+
+Current capabilities include:
+
+- Scheduled reconciliation runs every 12 hours
+- Automatic internal vs. provider ledger comparison
+- Reconciliation results persisted for each run
+- Existing reconciliation engine reused by the scheduled job
+- Manual reconciliation remains available independently
+
+                                                                                  ┌───────────────────────┐
+                                                                                  │ Scheduled Job         │
+                                                                                  │ Every 12 Hours        │
+                                                                                  └──────────┬────────────┘
+                                                                                             │
+                                                                                             ▼
+                                                                                  ┌──────────────────────┐
+                                                                                  │ Reconciliation       │
+                                                                                  │ Engine               │
+                                                                                  └──────────┬───────────┘
+                                                                                             │
+                                                                              ┌──────────────┴──────────────┐
+                                                                              │                             │
+                                                                              ▼                             ▼
+                                                                        ┌───────────────┐             ┌────────────────┐
+                                                                        │Internal Ledger│             │Provider Ledger │
+                                                                        └───────┬───────┘             └───────┬────────┘
+                                                                                │                             │
+                                                                                └──────────────┬──────────────┘
+                                                                                               │
+                                                                                               ▼
+                                                                                     Reconciliation Results
+                                                                                               │
+                                                                                               ▼
+                                                                                         Persist Results
+
 ## Transaction States
 
 | State        | Description                          |
@@ -309,8 +347,9 @@ Stage 5  ✅ Business Rule Enforcement
 Stage 6  ✅ Configurable Business Rules
 Stage 7  ✅ External Provider Ledger
 Stage 8  ✅ Reconciliation Engine
-Stage 9  ⏳ Reconciliation Scheduling & Alerts
-Stage 10+ ⏳ Planned
+Stage 9  ✅ Scheduled Reconciliation
+Stage 10 ⏳ Reconciliation Alerts & Notifications
+Stage 11+ ⏳ Planned
 ```
 
 Future stages will introduce concepts including:
@@ -364,16 +403,9 @@ docker compose up -d
 
 This project is intended to explore the engineering challenges involved in building financial backend systems, including:
 
-* Transaction correctness
-* Explicit lifecycle management
-* Idempotency
-* Configurable financial policies
-* Rule-driven transaction validation
 * Provider-specific business constraints
-* Concurrent updates
 * Event-driven processing
 * Failure recovery
-* Reconciliation
 * Security
 * Observability
 * Resilience
@@ -383,9 +415,9 @@ The architecture will evolve as these requirements are introduced.
 
 ## Project Status
 
-**Current milestone: Stage 8 completed.**
+**Current milestone: Stage 9 completed.**
 
-The next milestone focuses on introducing **Reconciliation Scheduler** into the transaction platform.
+The next milestone focuses on introducing **Security & Authorization** into the transaction platform.
 
 ---
 
