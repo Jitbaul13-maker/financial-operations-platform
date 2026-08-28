@@ -3,7 +3,9 @@ package com.finops.financial_operations_platform.reconciliationEngine.service;
 import com.finops.financial_operations_platform.enums.Provider;
 import com.finops.financial_operations_platform.models.ProviderTransaction;
 import com.finops.financial_operations_platform.models.Transaction;
+import com.finops.financial_operations_platform.reconciliationEngine.enums.ReconciliationResultType;
 import com.finops.financial_operations_platform.reconciliationEngine.enums.ReconciliationRunStatus;
+import com.finops.financial_operations_platform.reconciliationEngine.models.ReconciliationResult;
 import com.finops.financial_operations_platform.reconciliationEngine.models.ReconciliationRun;
 import com.finops.financial_operations_platform.reconciliationEngine.repo.ReconciliationRunRepository;
 import com.finops.financial_operations_platform.repos.ProviderTransactionRepository;
@@ -14,9 +16,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +27,7 @@ public class ReconciliationRunService {
     private final ProviderTransactionRepository providerTransactionRepository;
     private final ReconciliationService reconciliationService;
 
-    public ReconciliationRun start(String provider, LocalDate businessDate) {
+    private ReconciliationRun start(String provider, LocalDate businessDate) {
 
         ReconciliationRun run = new ReconciliationRun();
 
@@ -39,26 +39,79 @@ public class ReconciliationRunService {
         return reconciliationRunRepository.save(run);
     }
 
+    private void complete(ReconciliationRun run, int totalRecords, int matchedCount, int discrepancyCount) {
+        run.setCompletedAt(OffsetDateTime.now());
+        run.setTotalRecords(totalRecords);
+        run.setMatchedCount(matchedCount);
+        run.setDiscrepancyCount(discrepancyCount);
+        run.setStatus(ReconciliationRunStatus.COMPLETED);
+        reconciliationRunRepository.save(run);
+    }
+
+    private void fail(ReconciliationRun run, int totalRecords, int matchedCount, int discrepancyCount) {
+        run.setCompletedAt(OffsetDateTime.now());
+        run.setTotalRecords(totalRecords);
+        run.setMatchedCount(matchedCount);
+        run.setDiscrepancyCount(discrepancyCount);
+        run.setStatus(ReconciliationRunStatus.FAILED);
+        reconciliationRunRepository.save(run);
+    }
+
     public void execute(String provider, LocalDate businessDate) {
         ReconciliationRun run = start(provider, businessDate);
+        int totalRecords = 0;
+        int matchedCount = 0;
+        int discrepancyCount = 0;
 
-        Long runId = run.getId();
+        try {
+            Long runId = run.getId();
 
-        OffsetDateTime start = businessDate.atStartOfDay(ZoneOffset.UTC).toOffsetDateTime();
-        OffsetDateTime end = businessDate.plusDays(1).atStartOfDay(ZoneOffset.UTC).toOffsetDateTime();
+            OffsetDateTime start = businessDate.atStartOfDay(ZoneOffset.UTC).toOffsetDateTime();
+            OffsetDateTime end = businessDate.plusDays(1).atStartOfDay(ZoneOffset.UTC).toOffsetDateTime();
 
-        List<Transaction> transactions = transactionRepository
-                .findByProviderAndCreatedAtGreaterThanEqualAndCreatedAtLessThan(
-                        Provider.valueOf(provider),
-                        start,
-                        end
-                );
+            List<Transaction> transactions = transactionRepository
+                    .findByProviderAndCreatedAtGreaterThanEqualAndCreatedAtLessThan(
+                            Provider.valueOf(provider),
+                            start,
+                            end
+                    );
 
-        List<ProviderTransaction> providerTransactions = providerTransactionRepository
-                .findByProviderAndCreatedAtGreaterThanEqualAndCreatedAtLessThan(
-                        provider,
-                        start,
-                        end
-                );
+            Set<String> internalProviderTxnIds = new HashSet<>();
+
+            for(Transaction transaction : transactions){
+                internalProviderTxnIds.add(transaction.getProviderTransactionId());
+            }
+
+            List<ProviderTransaction> providerTransactions = providerTransactionRepository
+                    .findByProviderAndCreatedAtGreaterThanEqualAndCreatedAtLessThan(
+                            provider,
+                            start,
+                            end
+                    );
+
+            Set<String> externalProviderTxnIds = new HashSet<>();
+
+            for(ProviderTransaction transaction : providerTransactions){
+                externalProviderTxnIds.add(transaction.getProviderTransactionId());
+            }
+
+            Set<String> allTxnIds = new HashSet<>(internalProviderTxnIds);
+            allTxnIds.addAll(externalProviderTxnIds);
+
+            for (String providerTxnId : allTxnIds) {
+                ReconciliationResult result = reconciliationService.reconcile(provider, providerTxnId, runId);
+
+                totalRecords++;
+
+                if (result.getResultType() == ReconciliationResultType.MATCHED) matchedCount++;
+                else discrepancyCount++;
+            }
+
+            complete(run, totalRecords, matchedCount, discrepancyCount);
+        } catch (Exception e){
+            fail(run, totalRecords, matchedCount, discrepancyCount);
+            throw e;
+        }
+
     }
 }
