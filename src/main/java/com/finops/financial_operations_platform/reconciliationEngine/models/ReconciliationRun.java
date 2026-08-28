@@ -13,7 +13,14 @@ import java.time.OffsetDateTime;
 @Setter
 @Getter
 @NoArgsConstructor
-@Table(name = "reconciliation_run")
+@Table(name = "reconciliation_run",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_provider_business_date",
+                        columnNames = {"provider", "businessDate"}
+                )
+            }
+        )
 public class ReconciliationRun {
 
     public ReconciliationRun(String provider, LocalDate businessDate, OffsetDateTime startedAt, ReconciliationRunStatus status) {

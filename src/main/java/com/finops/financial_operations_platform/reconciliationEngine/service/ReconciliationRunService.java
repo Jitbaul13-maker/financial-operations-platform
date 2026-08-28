@@ -58,6 +58,12 @@ public class ReconciliationRunService {
     }
 
     public void execute(String provider, LocalDate businessDate) {
+
+        Optional<ReconciliationRun> existing = reconciliationRunRepository
+                .findByProviderAndBusinessDate(provider, businessDate);
+
+        if (existing.isPresent()) return;
+
         ReconciliationRun run = start(provider, businessDate);
         int totalRecords = 0;
         int matchedCount = 0;

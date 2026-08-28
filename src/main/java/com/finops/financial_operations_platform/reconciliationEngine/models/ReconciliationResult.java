@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "reconciliation_result")
 @NoArgsConstructor
 @Getter
 @Setter
+@Table(name = "reconciliation_result")
 public class ReconciliationResult {
 
     public ReconciliationResult(String internalTransactionId, String providerTransactionId,
