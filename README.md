@@ -283,31 +283,31 @@ Current capabilities include:
 - Existing reconciliation engine reused by the scheduled job
 - Manual reconciliation remains available independently
 
-                                                                                  ┌───────────────────────┐
-                                                                                  │ Scheduled Job         │
-                                                                                  │ Every 12 Hours        │
-                                                                                  └──────────┬────────────┘
-                                                                                             │
-                                                                                             ▼
-                                                                                  ┌──────────────────────┐
-                                                                                  │ Reconciliation       │
-                                                                                  │ Engine               │
-                                                                                  └──────────┬───────────┘
-                                                                                             │
-                                                                              ┌──────────────┴──────────────┐
-                                                                              │                             │
-                                                                              ▼                             ▼
-                                                                        ┌───────────────┐             ┌────────────────┐
-                                                                        │Internal Ledger│             │Provider Ledger │
-                                                                        └───────┬───────┘             └───────┬────────┘
-                                                                                │                             │
-                                                                                └──────────────┬──────────────┘
-                                                                                               │
-                                                                                               ▼
-                                                                                     Reconciliation Results
-                                                                                               │
-                                                                                               ▼
-                                                                                         Persist Results
+                    ┌──────────────────────┐
+                    │ Scheduled Job        │
+                    │ Every 12 Hours       │
+                    └──────────┬───────────┘
+                               │
+                               ▼
+                    ┌──────────────────────┐
+                    │ Reconciliation       │
+                    │ Engine               │
+                    └──────────┬───────────┘
+                               │
+                ┌──────────────┴──────────────┐
+                │                             │
+                ▼                             ▼
+        ┌───────────────┐             ┌────────────────┐
+        │Internal Ledger│             │Provider Ledger │
+        └───────┬───────┘             └───────┬────────┘
+                │                             │
+                └──────────────┬──────────────┘
+                               │
+                               ▼
+                     Reconciliation Results
+                               │
+                               ▼
+                         Persist Results
 
 ## Transaction States
 
