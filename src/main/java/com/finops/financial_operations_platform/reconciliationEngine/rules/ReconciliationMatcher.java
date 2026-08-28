@@ -54,10 +54,9 @@ public class ReconciliationMatcher {
         ReconciliationResultType resultType = ReconciliationResultType.MATCHED;
 
         Transaction txn = transactions.getFirst();
-        String status = normalizer.normalize(providerTransaction.getProvider(), providerTransaction.getStatus());
         Duration difference = Duration.between(txn.getCreatedAt(), providerTransaction.getCreatedAt()).abs();
 
-        if (txn.getStatus().name().equals(status)) {
+        if (txn.getStatus().name().equals(providerTransaction.getStatus())) {
             remarks.add("status ✅");
         } else {
             ReconciliationSeverity newSeverity = ReconciliationSeverity.MEDIUM;
@@ -68,7 +67,7 @@ public class ReconciliationMatcher {
                 severity = newSeverity;
             }
 
-            remarks.add("status mismatch: " + txn.getStatus() + ", " + status);
+            remarks.add("status mismatch: " + txn.getStatus() + ", " + providerTransaction.getStatus());
         }
 
         if (txn.getAmount().compareTo(providerTransaction.getAmount()) == 0) {

@@ -16,14 +16,15 @@ public class ReconciliationScheduler {
         this.reconciliationRunService = reconciliationRunService;
     }
 
-    @Scheduled(fixedRate = 10000)
+    @Scheduled(fixedRate = 12 * 60 * 60 * 10000)
     public void runDailyReconciliation(){
+
         for(Provider provider: Provider.values()) {
+
             reconciliationRunService.execute(
                     provider.name(),
-                    LocalDate.now().minusDays(1)
+                    LocalDate.now()
             );
         }
     }
 }
-

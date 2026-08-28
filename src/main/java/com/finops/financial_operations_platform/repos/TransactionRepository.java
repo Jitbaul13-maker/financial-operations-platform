@@ -14,7 +14,7 @@ import java.util.Optional;
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
     Optional<Transaction> findByTransactionId(String transactionId);
     boolean existsByProviderTransactionId(String providerTxnId);
-    List<Transaction> findByProviderAndProviderTransactionId(String provider, String providerTxnId);
+    List<Transaction> findByProviderAndProviderTransactionId(Provider provider, String providerTxnId);
     List<Transaction> findByProviderAndCreatedAtGreaterThanEqualAndCreatedAtLessThan(
             Provider provider,
             OffsetDateTime start,

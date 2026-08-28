@@ -65,6 +65,7 @@ public class ReconciliationRunService {
         if (existing.isPresent()) return;
 
         ReconciliationRun run = start(provider, businessDate);
+
         int totalRecords = 0;
         int matchedCount = 0;
         int discrepancyCount = 0;

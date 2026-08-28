@@ -147,7 +147,7 @@ public class TransactionService {
         tx.setStatus(requestedStatus);
 
         auditLogService.recordAudit(tx.getTransactionId(), oldStatus, requestedStatus, "SYSTEM",
-                "Transaction status updated");
+                "Transaction status updated from: " + oldStatus + "to: " + requestedStatus);
 
         return mapToResponse(tx);
     }

@@ -1,5 +1,6 @@
 package com.finops.financial_operations_platform.reconciliationEngine.service;
 
+import com.finops.financial_operations_platform.enums.Provider;
 import com.finops.financial_operations_platform.models.ProviderTransaction;
 import com.finops.financial_operations_platform.models.Transaction;
 import com.finops.financial_operations_platform.reconciliationEngine.enums.ReconciliationResultType;
@@ -25,7 +26,7 @@ public class ReconciliationService {
 
     public ReconciliationResult reconcile(String provider, String providerTransactionId, Long runId) {
         List<Transaction> transactions = transactionRepository
-                .findByProviderAndProviderTransactionId(provider, providerTransactionId);
+                .findByProviderAndProviderTransactionId(Provider.valueOf(provider), providerTransactionId);
 
         ProviderTransaction providerTransaction = providerTransactionRepository
                 .findByProviderAndProviderTransactionId(provider, providerTransactionId);
