@@ -1,4 +1,4 @@
-package com.finops.financial_operations_platform.configs;
+package com.finops.financial_operations_platform.config;
 
 import com.finops.financial_operations_platform.Dtos.IdempotencyRecord;
 import org.springframework.context.annotation.Bean;
