@@ -1,4 +1,4 @@
-package com.finops.financial_operations_platform.models;
+package com.finops.financial_operations_platform.audit.model;
 
 import com.finops.financial_operations_platform.enums.TransactionStatus;
 import jakarta.persistence.*;

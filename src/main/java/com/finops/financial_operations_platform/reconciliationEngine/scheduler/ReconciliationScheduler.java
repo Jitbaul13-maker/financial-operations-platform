@@ -23,7 +23,7 @@ public class ReconciliationScheduler {
 
             reconciliationRunService.execute(
                     provider.name(),
-                    LocalDate.now()
+                    LocalDate.now().minusDays(1)
             );
         }
     }

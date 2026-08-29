@@ -145,4 +145,16 @@ public class GlobalExceptionHandler {
                 )
         );
     }
+
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<ExceptionResponse> userAlreadyExistsException(UserAlreadyExistsException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                new ExceptionResponse(
+                        ex.getMessage(),
+                        HttpStatus.CONFLICT.value(),
+                        "Username already exists!",
+                        OffsetDateTime.now()
+                )
+        );
+    }
 }

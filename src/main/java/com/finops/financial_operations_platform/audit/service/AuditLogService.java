@@ -1,9 +1,9 @@
-package com.finops.financial_operations_platform.Services;
+package com.finops.financial_operations_platform.audit.service;
 
 import com.finops.financial_operations_platform.Dtos.AuditResponse;
 import com.finops.financial_operations_platform.Exceptions.TransactionNotFoundException;
+import com.finops.financial_operations_platform.audit.model.AuditLog;
 import com.finops.financial_operations_platform.enums.TransactionStatus;
-import com.finops.financial_operations_platform.models.AuditLog;
 import com.finops.financial_operations_platform.repos.AuditLogRepository;
 import org.springframework.stereotype.Service;
 

@@ -4,7 +4,7 @@ import com.finops.financial_operations_platform.Dtos.AuditResponse;
 import com.finops.financial_operations_platform.Dtos.CreateTransactionRequest;
 import com.finops.financial_operations_platform.Dtos.TransactionResponse;
 import com.finops.financial_operations_platform.Dtos.TransactionStatusUpdateRequest;
-import com.finops.financial_operations_platform.Services.AuditLogService;
+import com.finops.financial_operations_platform.audit.service.AuditLogService;
 import com.finops.financial_operations_platform.Services.TransactionService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;

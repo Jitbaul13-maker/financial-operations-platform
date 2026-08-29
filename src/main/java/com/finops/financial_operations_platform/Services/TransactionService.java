@@ -4,6 +4,7 @@ import com.finops.financial_operations_platform.Dtos.CreateTransactionRequest;
 import com.finops.financial_operations_platform.Dtos.IdempotencyResult;
 import com.finops.financial_operations_platform.Dtos.TransactionResponse;
 import com.finops.financial_operations_platform.Exceptions.*;
+import com.finops.financial_operations_platform.audit.service.AuditLogService;
 import com.finops.financial_operations_platform.businesslogics.TransactionStateMachine;
 import com.finops.financial_operations_platform.enums.RuleDecision;
 import com.finops.financial_operations_platform.enums.TransactionStatus;
@@ -18,7 +19,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 

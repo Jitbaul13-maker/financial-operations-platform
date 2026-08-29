@@ -5,7 +5,7 @@ import com.finops.financial_operations_platform.Dtos.IdempotencyRecord;
 import com.finops.financial_operations_platform.Dtos.IdempotencyResult;
 import com.finops.financial_operations_platform.Dtos.TransactionResponse;
 import com.finops.financial_operations_platform.Exceptions.TransactionRuleRejectedException;
-import com.finops.financial_operations_platform.Services.AuditLogService;
+import com.finops.financial_operations_platform.audit.service.AuditLogService;
 import com.finops.financial_operations_platform.Services.IdempotencyService;
 import com.finops.financial_operations_platform.Services.RequestFingerprintService;
 import com.finops.financial_operations_platform.Services.TransactionService;
@@ -23,7 +23,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 

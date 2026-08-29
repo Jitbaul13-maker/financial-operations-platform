@@ -1,6 +1,6 @@
 package com.finops.financial_operations_platform.repos;
 
-import com.finops.financial_operations_platform.models.AuditLog;
+import com.finops.financial_operations_platform.audit.model.AuditLog;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
