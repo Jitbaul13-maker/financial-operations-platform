@@ -157,4 +157,16 @@ public class GlobalExceptionHandler {
                 )
         );
     }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ExceptionResponse> unauthorizedException(UnauthorizedException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                new ExceptionResponse(
+                        ex.getMessage(),
+                        HttpStatus.UNAUTHORIZED.value(),
+                        "Unauthorized user!",
+                        OffsetDateTime.now()
+                )
+        );
+    }
 }
