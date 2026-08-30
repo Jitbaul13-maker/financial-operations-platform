@@ -29,13 +29,35 @@ The transaction flow now consists of an internal ledger, configurable business r
 
 ```text
 
-                         Transaction Request
-                                  │
-                                  ▼
-                         ┌─────────────────┐
-                         │   Security      │
-                         │   Check         │
-                         └────────┬────────┘
+       Transaction Request
+                │
+                ▼
+       ┌─────────────────┐
+       │  JWT Security   │
+       │     Filter      │
+       └────────┬────────┘
+                │
+       ┌────────┴────────┐
+       │                 │
+  Invalid JWT        Valid JWT
+       │                 │
+       ▼                 ▼
+    Reject        Extract Identity
+                         │
+                         ▼
+                ┌─────────────────┐
+                │      RBAC       │
+                │  Authorization  │
+                └────────┬────────┘
+                         │
+                ┌────────┴────────┐
+                │                 │
+             Forbidden         Allowed
+                │                 │
+                ▼                 |
+              Reject              |
+                                  |
+                                  |
                                   ▼
                          ┌─────────────────┐
                          │   Idempotency   │
@@ -96,9 +118,9 @@ The transaction flow now consists of an internal ledger, configurable business r
                         │             │             │
                         ▼             ▼             ▼
                     MATCHED       MISMATCHED     MISSING
-                                      │
-                                      ▼
-                             Reconciliation Result
+                        |             │              |
+                        |             ▼              |
+                        |-▶ Reconciliation Result ◀-|
                                       │
                                       ▼
                              Persist / Investigate
