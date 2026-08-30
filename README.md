@@ -33,6 +33,11 @@ The transaction flow now consists of an internal ledger, configurable business r
                                   │
                                   ▼
                          ┌─────────────────┐
+                         │   Security      │
+                         │   Check         │
+                         └────────┬────────┘
+                                  ▼
+                         ┌─────────────────┐
                          │   Idempotency   │
                          │   Check         │
                          └────────┬────────┘
