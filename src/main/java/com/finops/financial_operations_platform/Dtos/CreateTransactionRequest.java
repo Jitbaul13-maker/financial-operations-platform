@@ -19,8 +19,5 @@ public record CreateTransactionRequest (
 
     @NotBlank
     @Size(min = 3, max = 3)
-    String currency,
-
-    @NotBlank
-    String customerId
+    String currency
 ){}
