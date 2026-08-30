@@ -4,7 +4,7 @@ A backend-focused financial operations platform designed to model reliable trans
 
 The project is being developed incrementally, with an emphasis on correctness, explicit state management, testing, observability, and production-oriented engineering practices.
 
-> **Status:** 🚧 Under active development — Stage 9 completed.
+> **Status:** 🚧 Under active development — Stage 10 completed.
 
 ## Tech Stack
 
@@ -282,7 +282,7 @@ Current capabilities include:
 - Reconciliation results persisted for each run
 - Existing reconciliation engine reused by the scheduled job
 - Manual reconciliation remains available independently
-
+```text
                     ┌──────────────────────┐
                     │ Scheduled Job        │
                     │ Every 12 Hours       │
@@ -308,6 +308,60 @@ Current capabilities include:
                                │
                                ▼
                          Persist Results
+```
+
+### Stage 10 — Security Layer ✅
+
+Introduced authentication and role-based authorization across the platform.
+
+Current capabilities include:
+
+- JWT-based authentication
+- Stateless request authentication
+- Role-based access control (RBAC)
+- Protected API endpoints
+- Role-based authorization for sensitive operations
+- Authentication failure handling
+- Authorization failure handling
+
+```text
+                         Client Request
+                              │
+                              ▼
+                     ┌─────────────────┐
+                     │  JWT Security   │
+                     │     Filter      │
+                     └────────┬────────┘
+                              │
+                     ┌────────┴────────┐
+                     │                 │
+                 Invalid JWT        Valid JWT
+                     │                 │
+                     ▼                 ▼
+                   Reject        Extract Identity
+                                       │
+                                       ▼
+                              ┌─────────────────┐
+                              │      RBAC       │
+                              │  Authorization │
+                              └────────┬────────┘
+                                       │
+                              ┌────────┴────────┐
+                              │                 │
+                           Forbidden         Allowed
+                              │                 │
+                              ▼                 ▼
+                            Reject      Transaction Flow
+                                           
+```
+
+#### Security Boundary
+
+Authentication and authorization are enforced before entering the transaction domain.
+
+This ensures that sensitive financial operations are accessible only to authenticated users with the required roles, while keeping security concerns separated from the core transaction-processing logic.
+
+The security layer separates authentication (who is making the request) from authorization (what that user is allowed to do).
 
 ## Transaction States
 
@@ -348,15 +402,14 @@ Stage 6  ✅ Configurable Business Rules
 Stage 7  ✅ External Provider Ledger
 Stage 8  ✅ Reconciliation Engine
 Stage 9  ✅ Scheduled Reconciliation
-Stage 10 ⏳ Reconciliation Alerts & Notifications
-Stage 11+ ⏳ Planned
+Stage 10 ✅ Security Layer — JWT & RBAC
+Stage 11 ⏳ Planned
+Stage 12+ ⏳ Planned
 ```
 
 Future stages will introduce concepts including:
 
 * Kafka and asynchronous workflows
-* Reconciliation
-* Authentication and authorization
 * Observability and metrics
 * CI/CD
 * Cloud deployment
@@ -403,9 +456,13 @@ docker compose up -d
 
 This project is intended to explore the engineering challenges involved in building financial backend systems, including:
 
-* Provider-specific business constraints
+* Transaction correctness
+* Explicit lifecycle management
+* Idempotency
+* Concurrent updates
 * Event-driven processing
 * Failure recovery
+* Reconciliation
 * Security
 * Observability
 * Resilience
@@ -415,9 +472,9 @@ The architecture will evolve as these requirements are introduced.
 
 ## Project Status
 
-**Current milestone: Stage 9 completed.**
+**Current milestone: Stage 10 completed.**
 
-The next milestone focuses on introducing **Security & Authorization** into the transaction platform.
+The next milestone focuses on introducing **UI/UX** for the transaction platform.
 
 ---
 
