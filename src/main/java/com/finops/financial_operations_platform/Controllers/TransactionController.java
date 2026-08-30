@@ -20,14 +20,12 @@ import java.util.List;
 public class TransactionController {
 
     private final TransactionService transactionService;
-    private final AuditLogService auditLogService;
 
-    public TransactionController(TransactionService transactionService, AuditLogService auditLogService) {
+    public TransactionController(TransactionService transactionService) {
         this.transactionService = transactionService;
-        this.auditLogService = auditLogService;
     }
 
-    @PostMapping()
+    @PostMapping("/my")
     public ResponseEntity<TransactionResponse> createTransaction(@Valid @RequestBody CreateTransactionRequest req,
                                                                  @RequestHeader("Idempotency-Key") String key) {
         TransactionResponse response = transactionService.createTransaction(req, key);
@@ -35,13 +33,13 @@ public class TransactionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping("/{txnId}")
-    public ResponseEntity<TransactionResponse> getByTransactionId(@PathVariable("txnId") String txnId) {
-        TransactionResponse response = transactionService.getTransaction(txnId);
+    @GetMapping("/my")
+    public ResponseEntity<TransactionResponse> getByTransactionId() {
+        TransactionResponse response = transactionService.getTransaction();
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping()
+    @GetMapping("/all")
     public ResponseEntity<Page<TransactionResponse>> getAllTransactions(Pageable pageable) {
         Page<TransactionResponse> response = transactionService.getTransactions(pageable);
         return ResponseEntity.ok(response);
@@ -52,11 +50,5 @@ public class TransactionController {
             (@PathVariable("txnId") String id, @RequestBody @Valid TransactionStatusUpdateRequest request) {
         TransactionResponse response = transactionService.updateTransactionStatus(id, request.status());
         return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/{txnId}/audit")
-    public ResponseEntity<List<AuditResponse>> getAuditHistory(@PathVariable("txnId") String id) {
-            List<AuditResponse> response = auditLogService.getAuditHistory(id);
-            return ResponseEntity.ok(response);
     }
 }

@@ -1,4 +1,4 @@
-package com.finops.financial_operations_platform.config.service;
+package com.finops.financial_operations_platform.security.service;
 
 import com.finops.financial_operations_platform.user.model.User;
 import io.jsonwebtoken.Claims;

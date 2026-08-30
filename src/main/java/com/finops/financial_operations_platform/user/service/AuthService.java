@@ -1,7 +1,7 @@
 package com.finops.financial_operations_platform.user.service;
 
 import com.finops.financial_operations_platform.Exceptions.UsernameNotFoundException;
-import com.finops.financial_operations_platform.config.service.JwtService;
+import com.finops.financial_operations_platform.security.service.JwtService;
 import com.finops.financial_operations_platform.user.Dto.LoginRequest;
 import com.finops.financial_operations_platform.user.Dto.LoginResponse;
 import com.finops.financial_operations_platform.user.Dto.RegisterRequest;

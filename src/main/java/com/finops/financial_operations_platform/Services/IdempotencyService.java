@@ -20,7 +20,7 @@ public class IdempotencyService {
         this.redisTemplate = redisTemplate;
     }
 
-    public Boolean acquire(String key, IdempotencyRecord record) {
+    private Boolean acquire(String key, IdempotencyRecord record) {
         return redisTemplate.opsForValue().setIfAbsent(key, record, Duration.ofMinutes(2));
     }
 
@@ -49,11 +49,11 @@ public class IdempotencyService {
         throw new IdempotencyStateException("Idempotency failure");
     }
 
-    public IdempotencyRecord get(String key) {
+    private IdempotencyRecord get(String key) {
         return redisTemplate.opsForValue().get(key);
     }
 
-    public IdempotencyRecord complete(String key, String txnId) {
+    public void complete(String key, String txnId) {
         IdempotencyRecord record = redisTemplate.opsForValue().get(key);
 
         if(record == null) throw new IdempotencyStateException("No valid record found!");
@@ -70,8 +70,6 @@ public class IdempotencyService {
                     newRecord,
                     Duration.ofHours(24)
             );
-
-            return newRecord;
         }
 
         throw new IdempotencyStateException("Invalid record state!");

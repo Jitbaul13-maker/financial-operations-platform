@@ -13,6 +13,7 @@ import java.util.Optional;
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
     Optional<Transaction> findByTransactionId(String transactionId);
+    Optional<Transaction> findByCustomerId(String transactionId);
     boolean existsByProviderTransactionId(String providerTxnId);
     List<Transaction> findByProviderAndProviderTransactionId(Provider provider, String providerTxnId);
     List<Transaction> findByProviderAndCreatedAtGreaterThanEqualAndCreatedAtLessThan(

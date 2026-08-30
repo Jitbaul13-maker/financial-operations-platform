@@ -13,9 +13,13 @@ import com.finops.financial_operations_platform.repos.TransactionRepository;
 import com.finops.financial_operations_platform.rules.RuleEngine;
 import com.finops.financial_operations_platform.rules.RuleResult;
 import com.finops.financial_operations_platform.rules.TransactionContext;
+import com.finops.financial_operations_platform.security.userDetails.CustomUserDetails;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -56,6 +60,17 @@ public class TransactionService {
         );
     }
 
+    private String getCustomerId(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null ||
+                !(authentication.getPrincipal() instanceof CustomUserDetails userDetails)) {
+            throw new UnauthorizedException("User is not authenticated");
+        }
+
+        return userDetails.getCustomerId();
+    }
+
     @Transactional
     public TransactionResponse createTransaction(CreateTransactionRequest req, String key) {
 
@@ -66,7 +81,7 @@ public class TransactionService {
             case ACQUIRED -> {
                 Transaction tx = new Transaction();
 
-                tx.setCustomerId(req.customerId());
+                tx.setCustomerId(getCustomerId());
                 tx.setAmount(req.amount());
                 tx.setProvider(req.provider());
                 tx.setProviderTransactionId(req.providerTransactionId());
@@ -124,9 +139,12 @@ public class TransactionService {
         throw new IdempotencyStateException("Unexpected idempotency decision");
     }
 
-    public TransactionResponse getTransaction(String txId) {
-        Transaction tx = transactionRepository.findByTransactionId(txId)
-                .orElseThrow(() -> new TransactionNotFoundException("Transaction not found:" + txId));
+    public TransactionResponse getTransaction() {
+
+        String custId = getCustomerId();
+
+        Transaction tx = transactionRepository.findByCustomerId(custId)
+                .orElseThrow(() -> new TransactionNotFoundException("Np Transaction found"));
 
         return mapToResponse(tx);
     }

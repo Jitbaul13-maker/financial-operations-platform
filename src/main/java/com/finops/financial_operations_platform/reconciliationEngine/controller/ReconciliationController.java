@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/admin/reconciliation")
+@RequestMapping("/api/reconciliation")
 public class ReconciliationController {
 
     private final ReconciliationService reconciliationService;
