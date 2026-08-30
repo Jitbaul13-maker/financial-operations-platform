@@ -80,8 +80,7 @@ public class TransactionServiceTest {
                 Provider.RAZORPAY,
                 "PROVIDER-TEST-123",
                 BigDecimal.valueOf(500),
-                "INR",
-                "CUSTOMER-TEST-123"
+                "INR"
         );
 
         IdempotencyRecord record = new IdempotencyRecord(
@@ -108,8 +107,7 @@ public class TransactionServiceTest {
                 Provider.RAZORPAY,
                 "PROVIDER-TEST-123",
                 BigDecimal.valueOf(500),
-                "INR",
-                "CUSTOMER-TEST-123"
+                "INR"
         );
 
         IdempotencyRecord record = new IdempotencyRecord(

@@ -70,6 +70,7 @@ public class IdempotencyService {
                     newRecord,
                     Duration.ofHours(24)
             );
+            return;
         }
 
         throw new IdempotencyStateException("Invalid record state!");

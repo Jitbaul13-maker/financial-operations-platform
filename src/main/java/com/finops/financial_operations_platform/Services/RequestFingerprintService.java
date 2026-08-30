@@ -13,10 +13,9 @@ public class RequestFingerprintService {
     public String generate(CreateTransactionRequest request) {
 
         try {
-            String input = request.customerId() + "|"
-                    + request.amount() + "|" +
+            String input = request.amount() + "|" +
                     request.currency().toUpperCase() + "|"
-                    + request.provider();
+                    + request.provider() + "|" + request.providerTransactionId();
 
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hash = digest.digest(input.getBytes(StandardCharsets.UTF_8));

@@ -2,6 +2,7 @@ package com.finops.financial_operations_platform.security.config;
 
 import com.finops.financial_operations_platform.security.filter.JwtAuthenticationFilter;
 import com.finops.financial_operations_platform.security.service.CustomUserDetailsService;
+import com.finops.financial_operations_platform.security.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,17 +18,17 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecConfig {
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CustomUserDetailsService customUserDetailsService;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity){
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, JwtAuthenticationFilter jwtAuthenticationFilter){
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(
@@ -58,7 +59,7 @@ public class SecConfig {
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(
-                        jwtAuthenticationFilter, jwtAuthenticationFilter.getClass()
+                        jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class
                 )
                 .build();
     }
@@ -85,5 +86,16 @@ public class SecConfig {
     @Bean
     public AuthenticationManager authenticationManager(DaoAuthenticationProvider provider) throws Exception{
         return new ProviderManager(provider);
+    }
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter(
+            CustomUserDetailsService customUserDetailsService,
+            JwtService jwtService) {
+
+        return new JwtAuthenticationFilter(
+                jwtService,
+                customUserDetailsService
+        );
     }
 }
