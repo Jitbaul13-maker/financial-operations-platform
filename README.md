@@ -80,9 +80,9 @@ The transaction flow now consists of an internal ledger, configurable business r
                                   ┌────────┴────────┐
                                   │                 │
                               Invalid            Valid
-                                  │                 │
-                                  ▼                 ▼
-                               Reject       Optimistic Lock
+                                  │                │
+                                  ▼                ▼
+                               Reject              |
                                                    │
                                                    ▼
                                               State + Audit
@@ -148,7 +148,6 @@ These rules are evaluated before transaction processing and can be changed throu
 The transaction core currently provides:
 
 * **Idempotency** — duplicate requests do not create duplicate transactions.
-* **Optimistic locking** — concurrent updates are protected from stale writes.
 * **State-machine enforcement** — only valid transaction state transitions are permitted.
 * **Immutable auditing** — state changes are recorded in an append-only audit trail.
 * **Business-rule enforcement** — invalid transactions are rejected before processing.
