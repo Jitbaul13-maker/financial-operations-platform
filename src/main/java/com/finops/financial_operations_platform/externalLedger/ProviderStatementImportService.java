@@ -1,6 +1,6 @@
 package com.finops.financial_operations_platform.externalLedger;
 
-import com.finops.financial_operations_platform.Dtos.ProviderStatementRow;
+import com.finops.financial_operations_platform.reconciliationEngine.dto.ProviderStatementRow;
 import com.finops.financial_operations_platform.models.ProviderTransaction;
 import com.finops.financial_operations_platform.repos.ProviderTransactionRepository;
 import com.finops.financial_operations_platform.validations.ProviderStatementValidator;

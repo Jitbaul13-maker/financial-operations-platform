@@ -1,4 +1,4 @@
-package com.finops.financial_operations_platform.Dtos;
+package com.finops.financial_operations_platform.reconciliationEngine.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

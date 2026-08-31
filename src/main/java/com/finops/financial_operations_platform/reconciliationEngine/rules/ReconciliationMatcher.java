@@ -6,6 +6,7 @@ import com.finops.financial_operations_platform.models.Transaction;
 import com.finops.financial_operations_platform.reconciliationEngine.enums.ReconciliationResultType;
 import com.finops.financial_operations_platform.reconciliationEngine.enums.ReconciliationSeverity;
 import com.finops.financial_operations_platform.reconciliationEngine.models.ReconciliationResult;
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
@@ -13,13 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@NoArgsConstructor
 public class ReconciliationMatcher {
-
-    private final ProviderStatusNormalizer normalizer;
-
-    public ReconciliationMatcher(ProviderStatusNormalizer normalizer) {
-        this.normalizer = normalizer;
-    }
 
     private int resultPriority(ReconciliationResultType resultType) {
         return switch (resultType) {

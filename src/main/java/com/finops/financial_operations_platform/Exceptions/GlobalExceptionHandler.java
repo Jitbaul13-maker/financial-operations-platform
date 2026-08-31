@@ -1,6 +1,6 @@
 package com.finops.financial_operations_platform.Exceptions;
 
-import com.finops.financial_operations_platform.Dtos.ExceptionResponse;
+import com.finops.financial_operations_platform.Exceptions.dto.ExceptionResponse;
 import com.finops.financial_operations_platform.Dtos.ValidationExceptionResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

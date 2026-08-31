@@ -1,6 +1,6 @@
 package com.finops.financial_operations_platform.validations;
 
-import com.finops.financial_operations_platform.Dtos.ProviderStatementRow;
+import com.finops.financial_operations_platform.reconciliationEngine.dto.ProviderStatementRow;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;

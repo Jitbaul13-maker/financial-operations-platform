@@ -40,9 +40,6 @@ public class AuthService {
         user.setRole(Role.USER);
         user.setCustomerId("CUST_" + UUID.randomUUID());
 
-        System.out.println("USERNAME = " + user.getUsername());
-        System.out.println("PASSWORD HASH = " + user.getPasswordHash());
-
         User savedUser = userRepository.save(user);
 
         return new RegisterResponse(

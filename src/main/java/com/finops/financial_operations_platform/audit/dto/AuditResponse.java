@@ -1,4 +1,4 @@
-package com.finops.financial_operations_platform.Dtos;
+package com.finops.financial_operations_platform.audit.dto;
 
 import com.finops.financial_operations_platform.enums.TransactionStatus;
 

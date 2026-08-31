@@ -1,6 +1,6 @@
 package com.finops.financial_operations_platform.audit.service;
 
-import com.finops.financial_operations_platform.Dtos.AuditResponse;
+import com.finops.financial_operations_platform.audit.dto.AuditResponse;
 import com.finops.financial_operations_platform.Exceptions.TransactionNotFoundException;
 import com.finops.financial_operations_platform.audit.model.AuditLog;
 import com.finops.financial_operations_platform.enums.TransactionStatus;
@@ -38,8 +38,6 @@ public class AuditLogService {
 
     public void recordAudit(String transactionId, TransactionStatus oldStatus, TransactionStatus newStatus,
                              String actor, String reason) {
-
-//        throw new RuntimeException("Simulated audit failure");
 
         AuditLog log = new AuditLog(
                 oldStatus, newStatus, actor, reason, transactionId

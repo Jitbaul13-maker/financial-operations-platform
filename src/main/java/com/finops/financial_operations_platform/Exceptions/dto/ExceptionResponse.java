@@ -1,4 +1,4 @@
-package com.finops.financial_operations_platform.Dtos;
+package com.finops.financial_operations_platform.Exceptions.dto;
 
 import java.time.OffsetDateTime;
 

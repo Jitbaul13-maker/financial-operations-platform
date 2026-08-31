@@ -1,6 +1,6 @@
 package com.finops.financial_operations_platform.externalLedger;
 
-import com.finops.financial_operations_platform.Dtos.ProviderStatementRow;
+import com.finops.financial_operations_platform.reconciliationEngine.dto.ProviderStatementRow;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
