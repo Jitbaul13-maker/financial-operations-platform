@@ -18,6 +18,7 @@ The project is being developed incrementally, with an emphasis on correctness, e
 * Maven
 * Docker / Docker Compose
 * JUnit
+* OpenAPI / Swagger
 
 Additional infrastructure and distributed-system components will be introduced as the project progresses.
 
@@ -351,37 +352,6 @@ Current capabilities include:
 - Authentication failure handling
 - Authorization failure handling
 
-```text
-                         Client Request
-                              │
-                              ▼
-                     ┌─────────────────┐
-                     │  JWT Security   │
-                     │     Filter      │
-                     └────────┬────────┘
-                              │
-                     ┌────────┴────────┐
-                     │                 │
-                 Invalid JWT        Valid JWT
-                     │                 │
-                     ▼                 ▼
-                   Reject        Extract Identity
-                                       │
-                                       ▼
-                              ┌─────────────────┐
-                              │      RBAC       │
-                              │  Authorization │
-                              └────────┬────────┘
-                                       │
-                              ┌────────┴────────┐
-                              │                 │
-                           Forbidden         Allowed
-                              │                 │
-                              ▼                 ▼
-                            Reject      Transaction Flow
-                                           
-```
-
 #### Security Boundary
 
 Authentication and authorization are enforced before entering the transaction domain.
@@ -403,6 +373,23 @@ The security layer separates authentication (who is making the request) from aut
 ## Audit Guarantees
 
 The platform maintains an append-only audit trail for every transaction state change.
+
+## API Documentation
+
+The backend exposes interactive OpenAPI documentation through Swagger UI.
+
+When running the application locally:
+
+- Swagger UI: `/swagger-ui/index.html`
+- OpenAPI specification: `/v3/api-docs`
+
+Protected endpoints require a JWT Bearer token. Use the **Authorize** button in Swagger UI to provide the JWT obtained from the login endpoint.
+
+### Authentication
+
+- `POST /auth/register` — Public
+- `POST /auth/login` — Public
+- Protected APIs require `Authorization: Bearer <JWT>`
 
 Every audit record captures:
 
@@ -487,6 +474,7 @@ This project is intended to explore the engineering challenges involved in build
 * Explicit lifecycle management
 * Idempotency
 * Concurrent updates
+* OpenAPI/Swagger documentation with JWT authentication support
 * Event-driven processing
 * Failure recovery
 * Reconciliation
