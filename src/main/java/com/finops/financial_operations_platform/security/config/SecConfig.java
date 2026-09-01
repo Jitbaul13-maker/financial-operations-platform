@@ -26,9 +26,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecConfig {
 
     private final CustomUserDetailsService customUserDetailsService;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, JwtAuthenticationFilter jwtAuthenticationFilter){
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity){
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(
@@ -94,14 +95,4 @@ public class SecConfig {
         return new ProviderManager(provider);
     }
 
-    @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter(
-            CustomUserDetailsService customUserDetailsService,
-            JwtService jwtService) {
-
-        return new JwtAuthenticationFilter(
-                jwtService,
-                customUserDetailsService
-        );
-    }
 }
