@@ -6,6 +6,13 @@ The project is being developed incrementally, with an emphasis on correctness, e
 
 > **Status:** 🚧 Under active development — Stage 10 completed.
 
+## 🚀 Live Demo
+
+**Swagger UI:**  
+[Open API Documentation](https://financial-operations-platform-production.up.railway.app/swagger-ui/index.html)
+
+> The application is deployed on Railway. API endpoints can be explored and tested through the publicly accessible Swagger UI.
+
 ## Tech Stack
 
 ### Currently Implemented
@@ -441,6 +448,8 @@ Ensure the following are installed:
 * Docker
 * Docker Compose
 * Git
+* Docker
+* Docker Compose
 
 ### Clone the Repository
 
@@ -453,16 +462,100 @@ cd financial-operations-platform
 
 Create the required local environment configuration without committing secrets to the repository.
 
+The application expects the following environment variables:
+
+```env
+DB_HOST=postgres
+DB_PORT=5432
+
+POSTGRES_DB=financial_operations
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=<your-password>
+
+REDIS_HOST=redis
+REDIS_PORT=6379
+
+JWT_SECRET=<your-secret>
+```
+
 ### Start Infrastructure
+
+Build the application image and start the complete Docker Compose stack:
+
+```bash
+docker compose up -d --build
+```
+
+This starts the complete application environment, including:
+
+- Spring Boot backend
+- PostgreSQL
+- Redis
+
+The Spring Boot application is built inside the Docker image using the project's Dockerfile.
+
+### Verify Running Containers
+
+```bash
+docker compose ps
+```
+
+All required services should be running.
+
+### View Application Logs
+
+To follow the backend logs:
+
+```bash
+docker compose logs -f app
+```
+
+To view logs for the entire stack:
+
+```bash
+docker compose logs -f
+```
+
+### Access the Application
+
+Once the stack is running:
+
+#### Swagger UI:
+
+```link
+http://localhost:8080/swagger-ui/index.html
+```
+
+The Swagger UI provides access to the publicly available API documentation and allows API endpoints to be explored and tested.
+
+### Stop the Application Stack
+
+To stop the containers while preserving their volumes:
+
+```bash
+docker compose down
+```
+
+To remove the containers along with their associated volumes:
+
+```bash
+docker compose down -v
+```
+
+#### Warning: docker compose down -v removes the PostgreSQL and Redis volumes and therefore deletes the locally persisted application data.
+
+### Rebuild After Code Changes
+
+When application code or the Dockerfile changes, rebuild the application image:
+
+```bash
+docker compose up -d --build
+```
+
+For changes that do not require rebuilding the image, the existing containers can simply be started with:
 
 ```bash
 docker compose up -d
-```
-
-### Run the Application
-
-```bash
-./mvnw spring-boot:run
 ```
 
 ## Engineering Goals
