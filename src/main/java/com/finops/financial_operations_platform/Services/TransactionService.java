@@ -71,6 +71,16 @@ public class TransactionService {
         return userDetails.getCustomerId();
     }
 
+    private String getActor() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if(authentication == null || !(authentication.getPrincipal() instanceof CustomUserDetails userDetails)) {
+            throw new UnauthorizedException("Unauthorized user!");
+        }
+
+        return userDetails.getAuthorities() + userDetails.getUsername();
+    }
+
     @Transactional
     public TransactionResponse createTransaction(CreateTransactionRequest req, String key) {
 
@@ -111,7 +121,7 @@ public class TransactionService {
 
                 Transaction saved_tx = transactionRepository.save(tx);
                 auditLogService.recordAudit(saved_tx.getTransactionId(), null,
-                        TransactionStatus.INITIATED, "SYSTEM",
+                        TransactionStatus.INITIATED, getActor(),
                         "Initial Transaction creation");
 
                 idempotencyService.complete(key, saved_tx.getTransactionId());
@@ -164,7 +174,7 @@ public class TransactionService {
         TransactionStatus oldStatus = tx.getStatus();
         tx.setStatus(requestedStatus);
 
-        auditLogService.recordAudit(tx.getTransactionId(), oldStatus, requestedStatus, "SYSTEM",
+        auditLogService.recordAudit(tx.getTransactionId(), oldStatus, requestedStatus, getActor(),
                 "Transaction status updated from: " + oldStatus + "to: " + requestedStatus);
 
         return mapToResponse(tx);
