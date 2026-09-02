@@ -10,12 +10,9 @@ public class VelocityCounterService {
 
     private final RedisTemplate<String, String> details;
 
-
     public VelocityCounterService(RedisTemplate<String, String> details) {
         this.details = details;
     }
-
-    String ruleCode = "VELOCITY_RULE";
 
     public long incrementCounter(String customerId, Long windowMinutes) {
 
