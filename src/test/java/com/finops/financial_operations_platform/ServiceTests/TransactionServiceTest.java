@@ -1,13 +1,15 @@
 package com.finops.financial_operations_platform.ServiceTests;
 
 import com.finops.financial_operations_platform.Dtos.CreateTransactionRequest;
-import com.finops.financial_operations_platform.Dtos.IdempotencyRecord;
-import com.finops.financial_operations_platform.Dtos.IdempotencyResult;
 import com.finops.financial_operations_platform.Dtos.TransactionResponse;
 import com.finops.financial_operations_platform.Exceptions.TransactionRuleRejectedException;
+import com.finops.financial_operations_platform.Idempotency.dto.IdempotencyRecord;
+import com.finops.financial_operations_platform.Idempotency.dto.IdempotencyResult;
+import com.finops.financial_operations_platform.Idempotency.enums.IdempotencyDecision;
+import com.finops.financial_operations_platform.Idempotency.enums.IdempotencyStatus;
+import com.finops.financial_operations_platform.Idempotency.service.IdempotencyService;
+import com.finops.financial_operations_platform.Idempotency.service.RequestFingerprintService;
 import com.finops.financial_operations_platform.audit.service.AuditLogService;
-import com.finops.financial_operations_platform.Services.IdempotencyService;
-import com.finops.financial_operations_platform.Services.RequestFingerprintService;
 import com.finops.financial_operations_platform.Services.TransactionService;
 import com.finops.financial_operations_platform.businesslogics.TransactionStateMachine;
 import com.finops.financial_operations_platform.enums.*;

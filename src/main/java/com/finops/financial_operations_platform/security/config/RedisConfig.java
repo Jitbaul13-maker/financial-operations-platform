@@ -1,11 +1,13 @@
 package com.finops.financial_operations_platform.security.config;
 
-import com.finops.financial_operations_platform.Dtos.IdempotencyRecord;
+import com.finops.financial_operations_platform.Idempotency.dto.IdempotencyRecord;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 
+import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.data.redis.serializer.JacksonJsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import tools.jackson.databind.ObjectMapper;
@@ -29,5 +31,13 @@ public class RedisConfig {
         template.afterPropertiesSet();
 
         return template;
+    }
+
+    @Bean
+    public RedisScript<Long> completeIdempotencyScript() {
+        return RedisScript.of(
+                new ClassPathResource("redis/complete_idempotency.lua"),
+                Long.class
+        );
     }
 }

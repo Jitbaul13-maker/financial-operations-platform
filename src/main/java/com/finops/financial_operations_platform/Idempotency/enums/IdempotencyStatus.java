@@ -1,4 +1,4 @@
-package com.finops.financial_operations_platform.enums;
+package com.finops.financial_operations_platform.Idempotency.enums;
 
 public enum IdempotencyStatus {
     PROCESSING,

@@ -1,7 +1,7 @@
 package com.finops.financial_operations_platform.ServiceTests;
 
 import com.finops.financial_operations_platform.Exceptions.IdempotencyStateException;
-import com.finops.financial_operations_platform.Services.IdempotencyService;
+import com.finops.financial_operations_platform.Idempotency.service.IdempotencyService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

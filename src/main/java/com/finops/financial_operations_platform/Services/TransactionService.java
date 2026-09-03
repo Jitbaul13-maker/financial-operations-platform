@@ -1,7 +1,9 @@
 package com.finops.financial_operations_platform.Services;
 
 import com.finops.financial_operations_platform.Dtos.CreateTransactionRequest;
-import com.finops.financial_operations_platform.Dtos.IdempotencyResult;
+import com.finops.financial_operations_platform.Idempotency.service.IdempotencyService;
+import com.finops.financial_operations_platform.Idempotency.service.RequestFingerprintService;
+import com.finops.financial_operations_platform.Idempotency.dto.IdempotencyResult;
 import com.finops.financial_operations_platform.Dtos.TransactionResponse;
 import com.finops.financial_operations_platform.Exceptions.*;
 import com.finops.financial_operations_platform.audit.service.AuditLogService;
@@ -18,7 +20,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 

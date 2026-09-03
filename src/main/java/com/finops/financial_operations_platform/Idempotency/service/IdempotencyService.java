@@ -1,24 +1,25 @@
-package com.finops.financial_operations_platform.Services;
+package com.finops.financial_operations_platform.Idempotency.service;
 
-import com.finops.financial_operations_platform.Dtos.IdempotencyResult;
 import com.finops.financial_operations_platform.Exceptions.IdempotencyStateException;
-import com.finops.financial_operations_platform.Dtos.IdempotencyRecord;
-import com.finops.financial_operations_platform.enums.IdempotencyDecision;
-import com.finops.financial_operations_platform.enums.IdempotencyStatus;
+import com.finops.financial_operations_platform.Idempotency.dto.IdempotencyRecord;
+import com.finops.financial_operations_platform.Idempotency.dto.IdempotencyResult;
+import com.finops.financial_operations_platform.Idempotency.enums.IdempotencyDecision;
+import com.finops.financial_operations_platform.Idempotency.enums.IdempotencyStatus;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.Objects;
 
 @Service
+@RequiredArgsConstructor
 public class IdempotencyService {
 
     private final RedisTemplate<String, IdempotencyRecord> redisTemplate;
-
-    public IdempotencyService(RedisTemplate<String, IdempotencyRecord> redisTemplate) {
-        this.redisTemplate = redisTemplate;
-    }
+    private final RedisScript<Long> completeIdempotencyScript;
 
     private Boolean acquire(String key, IdempotencyRecord record) {
         return redisTemplate.opsForValue().setIfAbsent(key, record, Duration.ofMinutes(2));
@@ -54,26 +55,23 @@ public class IdempotencyService {
     }
 
     public void complete(String key, String txnId) {
-        IdempotencyRecord record = redisTemplate.opsForValue().get(key);
 
-        if(record == null) throw new IdempotencyStateException("No valid record found!");
+        Long result = redisTemplate.execute(
+                completeIdempotencyScript,
+                List.of(key),
+                txnId
+        );
 
-        if (record.status() == IdempotencyStatus.PROCESSING) {
-            IdempotencyRecord newRecord = new IdempotencyRecord(
-                    IdempotencyStatus.COMPLETED,
-                    record.requestFingerprint(),
-                    txnId
-            );
-
-            redisTemplate.opsForValue().set(
-                    key,
-                    newRecord,
-                    Duration.ofHours(24)
-            );
-            return;
+        if (result == null) {
+            throw new IllegalStateException("Unexpected null result from Redis");
         }
 
-        throw new IdempotencyStateException("Invalid record state!");
+        switch (result.intValue()) {
+            case 0 -> throw new IdempotencyStateException("No valid record found!");
+            case 1 -> throw new IdempotencyStateException("Invalid record state!");
+            case 2 -> { return; }
+            default -> throw new IllegalStateException("Unexpected Redis result: " + result);
+        }
     }
 
     public IdempotencyResult claim(String key, String fingerprint) {

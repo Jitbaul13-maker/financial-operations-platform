@@ -1,4 +1,4 @@
-package com.finops.financial_operations_platform.Services;
+package com.finops.financial_operations_platform.Idempotency.service;
 
 import com.finops.financial_operations_platform.Dtos.CreateTransactionRequest;
 import org.springframework.stereotype.Service;
